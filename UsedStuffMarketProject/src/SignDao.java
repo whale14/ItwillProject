@@ -18,7 +18,7 @@ public class SignDao {
         }
     }
 
-    //·Î±×ÀÎ
+    //ë¡œê·¸ì¸
     public boolean signIn(String id) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -26,7 +26,7 @@ public class SignDao {
             signInSQL.append("SELECT ID");
             signInSQL.append(" FROM CLIENT");
             signInSQL.append(" WHERE ID = ?");
-            //ÆÄ¶ó¹ÌÅÍ·Î ³Ñ¾î¿Â id·Î µğºñ Á¶È¸ÈÄ ÀÖ´Ù¸é true ¾ø´Ù¸é false ¸®ÅÏ
+            //íŒŒë¼ë¯¸í„°ë¡œ ë””ë¹„ ì¡°íšŒí›„ ìˆë‹¤ë©´ true ì—†ë‹¤ë©´ false
             
         } catch (SQLException e) {
             e.printStackTrace();
