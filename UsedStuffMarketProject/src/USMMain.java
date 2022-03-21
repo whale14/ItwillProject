@@ -1,4 +1,7 @@
 
 public class USMMain {
-    new USM().startProgram();
+	public static void main(String[] args) {
+		new USM().startProgram();	
+	}
+    
 }
