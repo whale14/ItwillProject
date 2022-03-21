@@ -34,9 +34,9 @@ public class USM {
             if (!new USMDao().selectID(user.getPhone())) {
                 String pwConfirm;
                 while (true) {
-                    System.out.println("비밀번호 : ");
+                    System.out.print("비밀번호 : ");
                     userPw = scanner.nextLine();
-                    System.out.println("비밀번호 확인 : ");
+                    System.out.print("비밀번호 확인 : ");
                     pwConfirm = scanner.nextLine();
                     if (userPw.equals(pwConfirm)) {
                         System.out.println("비밀번호 설정완료.");
@@ -45,10 +45,10 @@ public class USM {
                         System.out.println("비밀번호가 다릅니다. 다시입력해주세요.");
                     }
                 }
-                System.out.println("이름(닉네임) : ");
+                System.out.print("이름(닉네임) : ");
                 name = scanner.nextLine();
-                System.out.println("[1.서울특별시\t2.인천광역시\t3.대전광역시\t4.울산광역시\t]\n" +
-                        "[5.부산광역시\t6.광주광역시\t7.경기도\t\t8.강원도\t]\n" +
+                System.out.print("[1.서울특별시\t2.인천광역시\t3.대전광역시\t4.울산광역시\t]\n" +
+                        "[5.부산광역시\t6.광주광역시\t7.경기도\t\t8.강원도\t\t]\n" +
                         "[9.충청도\t10.전라도\t11.경상도\t12.제주도\t]\n " +
                         "거주지역(번호만입력) : ");
                 while (true) {
