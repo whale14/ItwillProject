@@ -3,8 +3,8 @@ import java.sql.*;
 public class SignDao {
     private final static String DRIVER = "oracle.jdbc.OracleDriver";
     private final String URL = "jdbc:oracle:thin:@localhost:1521:XE";
-    private final String USER = "mystudy";
-    private final String PASSWORD = "mystudypw";
+    private final String USER = "USM";
+    private final String PASSWORD = "usmpw";
 
     private Connection connection;
     private PreparedStatement preparedStatement;
@@ -19,15 +19,44 @@ public class SignDao {
     }
 
     //로그인
-    public boolean signIn(String id) {
+    public boolean selectID(int id) {
+        try {
+            System.out.println("파라미터ID : " + id);
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder signInSQL = new StringBuilder();
+            signInSQL.append("SELECT CLIENT_ID ");
+            signInSQL.append("FROM CLIENT_INFO ");
+            signInSQL.append("WHERE CLIENT_ID = ?");
+            preparedStatement = connection.prepareStatement(signInSQL.toString());
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                System.out.println(resultSet.getString("CLIENT_ID"));
+                return true;
+            } else return false;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement, resultSet);
+        }
+        return true;
+    }
+    public boolean matchPW(int id, String pw) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
             StringBuilder signInSQL = new StringBuilder();
-            signInSQL.append("SELECT ID");
-            signInSQL.append(" FROM CLIENT");
-            signInSQL.append(" WHERE ID = ?");
-            //파라미터로 디비 조회후 있다면 true 없다면 false
-            
+            signInSQL.append("SELECT CLIENT_PW ");
+            signInSQL.append("FROM CLIENT_INFO ");
+            signInSQL.append("WHERE CLIENT_ID = ?");
+            preparedStatement = connection.prepareStatement(signInSQL.toString());
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                if (pw.equals(resultSet.getString("CLIENT_PW"))) return true;
+                else return false;
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
