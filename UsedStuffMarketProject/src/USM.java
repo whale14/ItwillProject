@@ -30,21 +30,28 @@ public class USM {
     public void login() {
         UserInfo user = new UserInfo();
         System.out.println("로그인");
-        System.out.print("전화번호 : ");
-        userId = scanner.nextInt();
-        System.out.println("USERID : " + userId);
-        scanner.nextLine();
-        user.setPhone(userId);
-        if(new SignDao().selectID(user.getPhone())) {
-            System.out.println("비밀번호를 입력해주세요");
-            System.out.print("비밀번호 : ");
-            userPw = scanner.nextLine();
-            user.setPw(userPw);
-            if (new SignDao().matchPW(user.getPhone(),user.getPw())) {
-                System.out.println("로그인성공");
+        while (true) {
+            System.out.print("전화번호 : ");
+            userId = scanner.nextInt();
+            scanner.nextLine();
+            user.setPhone(userId);
+
+            if (new SignDao().selectID(user.getPhone())) {
+                while (true) {
+                    System.out.println("비밀번호를 입력해주세요");
+                    System.out.print("비밀번호 : ");
+                    userPw = scanner.nextLine();
+                    user.setPw(userPw);
+                    if (new SignDao().matchPW(user.getPhone(), user.getPw())) {
+                        System.out.println("로그인성공");
+                        break;
+                    } else {
+                        System.out.println("잘못 입력하셨습니다. 다시입력해주세요");
+                    }
+                } break;
             } else {
-                System.out.println("잘못 입력하셨습니다. 다시입력해주세요");
+                System.out.println("없는 아이디입니다. 다시입력해주세요.");
             }
-        } else System.out.println("없는 아이디입니다. 다시입력해주세요.");
+        }
     }
 }

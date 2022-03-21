@@ -21,7 +21,6 @@ public class SignDao {
     //로그인
     public boolean selectID(int id) {
         try {
-            System.out.println("파라미터ID : " + id);
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
             StringBuilder signInSQL = new StringBuilder();
             signInSQL.append("SELECT CLIENT_ID ");
