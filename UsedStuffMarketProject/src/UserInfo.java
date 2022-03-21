@@ -2,16 +2,16 @@ public class UserInfo {
     private int phone;
     private String pw;
     private String name;
-    private String address;
+    private String region;
     private int reliable;
 
     public UserInfo() {
     }
 
-    public UserInfo(int phone,String pw, String name, String address, int reliable) {
+    public UserInfo(int phone, String pw, String name, String region, int reliable) {
         this.phone = phone;
         this.name = name;
-        this.address = address;
+        this.region = region;
         this.reliable = reliable;
     }
 
@@ -39,12 +39,12 @@ public class UserInfo {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public String getRegion() {
+        return region;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public int getReliable() {
