@@ -32,12 +32,15 @@ INSERT INTO PRODUCT
 INSERT INTO PRODUCT 
     VALUES (10,'미개봉 에어프라이기 팔아요!',' 이사관계로 미개봉 새제품 판매합니다 ㅠㅠ 25일 13시까지만 판매가능 ㅠㅠ ',01023443983,111111);    
     
+INSERT INTO PRODUCT 
+    VALUES ((SELECT MAX(product_id)+1 FROM product),'미개봉 에어프라이기 팔아요!',' 이사관계로 미개봉 새제품 판매합니다 ㅠㅠ 25일 13시까지만 판매가능 ㅠㅠ ',01023443983,111111);    
+    
 
 
 SELECT *
 FROM PRODUCT P, CLIENT_INFO C , REGION R
 WHERE P.CLIENT_ID = C.CLIENT_ID 
-AND r.region_id = c.regin_id
+AND r.region_id = c.region_id
 ORDER BY PRODUCT_ID;
     
     
