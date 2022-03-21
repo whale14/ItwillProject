@@ -104,6 +104,7 @@ public class USM {
 				new USMDao().insertSignUp(user);
 				System.out.println("회원가입 완료");
 				login();
+				break;
 			} else {
 				System.out.println("이미 존재하는 전화번호 입니다. 다시입력해주세요");
 			}
