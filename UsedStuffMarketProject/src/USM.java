@@ -100,15 +100,15 @@ public class USM {
         String columnPrice = "가격";
         String columnReliable = "신뢰도";
         System.out.println(columnNo + " | " + columnTitle + " | " + columnName + " | " + columnPrice + " | " + columnReliable);
-
+        int i = 1;
         for (SearchVO vo : searchLists) {
-            int i = 1;
+            
 
             String title = String.format("%-20s", vo.getProductName());
             String name = String.format("%-7s", vo.getClientName());
             String price = String.format("%9s", vo.getPrice());
             String reliable = String.format("%3s", vo.getReliable());
-            System.out.println(i + ".\t|" + title + "|" + name + "|" + price + "|" + reliable);
+            System.out.println(i++ + ".\t|" + title + "|" + name + "|" + price + "|" + reliable);
         }
     }
 
