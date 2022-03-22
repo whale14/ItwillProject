@@ -21,42 +21,23 @@ public class USMDao {
     }
 
     //·Î±×ÀÎ
-    public boolean selectIDWhereID(int id) {
+    public ClientVO selectAllFromClientWhereID(int id) {
+        ClientVO client = new ClientVO();
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT CLIENT_ID ");
+            sql.append("SELECT * ");
             sql.append("FROM CLIENT_INFO ");
             sql.append("WHERE CLIENT_ID = ?");
             preparedStatement = connection.prepareStatement(sql.toString());
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                System.out.println(resultSet.getString("CLIENT_ID"));
-                return true;
-            } else return false;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            close(connection, preparedStatement, resultSet);
-        }
-        return true;
-    }
-
-    public boolean selectPWWhereID(int id, String pw) {
-        try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            StringBuilder sql = new StringBuilder();
-            sql.append("SELECT CLIENT_PW ");
-            sql.append("FROM CLIENT_INFO ");
-            sql.append("WHERE CLIENT_ID = ?");
-            preparedStatement = connection.prepareStatement(sql.toString());
-            preparedStatement.setInt(1, id);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                if (pw.equals(resultSet.getString("CLIENT_PW"))) return true;
-                else return false;
+                client.setClientID(resultSet.getInt("CLIENT_ID"));
+                client.setClientName(resultSet.getString("CLIENT_NAME"));
+                client.setClientPW(resultSet.getString("CLIENT_PW"));
+                client.setRegionID(resultSet.getString("REGION_ID"));
+                client.setReliable(resultSet.getInt("RELIABILITY"));
             }
 
         } catch (SQLException e) {
@@ -64,7 +45,7 @@ public class USMDao {
         } finally {
             close(connection, preparedStatement, resultSet);
         }
-        return true;
+        return client;
     }
 
     public int insertClient(ClientVO vo) {
@@ -120,7 +101,6 @@ public class USMDao {
         }
         return searchLists;
     }
-
 
     public ProductVO selectAllProductWhereProductID(int productID) {
         ProductVO product = null;
@@ -187,6 +167,7 @@ public class USMDao {
             sql.append("SELECT p.PRODUCT_ID, c.CLIENT_NAME, p.PRODUCT_NAME, p.PRICE, c.RELIABILITY ");
             sql.append(" FROM CLIENT_INFO c JOIN PRODUCT p ");
             sql.append(" ON c.REGION_ID = p.REGION_ID");
+            sql.append(" AND p.REGION_ID = '" + regionID +"'");
             preparedStatement = connection.prepareStatement(sql.toString());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -206,7 +187,7 @@ public class USMDao {
         return searchLists;
     }
 
-    public int insertProduct(String productName, String productDescription, int clientID, String regionID, int price) {
+    public void insertProduct(String productName, String productDescription, int clientID, String regionID, int price) {
         int result = 0;
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -215,8 +196,8 @@ public class USMDao {
             sql.append(" VALUES ((select max(product_id)+1 from product)" + ", '");
             sql.append(productName).append("', '");
             sql.append(productDescription).append("', ");
-            sql.append(clientID).append(", ");
-            sql.append(price).append(", '");
+            sql.append(price).append(", ");
+            sql.append(clientID).append(", '");
             sql.append(regionID).append("')");
             preparedStatement = connection.prepareStatement(sql.toString());
             result = preparedStatement.executeUpdate();
@@ -225,7 +206,6 @@ public class USMDao {
         } finally {
             close(connection, preparedStatement);
         }
-        return result;
     }
 
     private void close(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet) {

@@ -231,15 +231,13 @@ public class USM {
             System.out.print("전화번호 : ");
             clientID = scanner.nextInt();
             scanner.nextLine();
-            client.setClientID(clientID);
-
-            if (new USMDao().selectIDWhereID(client.getClientID())) {
+            client = new USMDao().selectAllFromClientWhereID(clientID);
+            if (client.getClientID() != 0) {
                 while (true) {
                     System.out.println("비밀번호를 입력해주세요");
                     System.out.print("비밀번호 : ");
                     clientPW = scanner.nextLine();
-                    client.setClientPW(clientPW);
-                    if (new USMDao().selectPWWhereID(client.getClientID(), client.getClientPW())) {
+                    if (client.getClientPW().equals(clientPW)) {
                         System.out.println("로그인성공");
                         break;
                     } else {
@@ -255,15 +253,15 @@ public class USM {
 
     //회원가입
     public void signUp() {
-        client = new ClientVO();
+        client = null;
         System.out.println("회원가입");
         while (true) {
             System.out.print("전화번호 : ");
             clientID = scanner.nextInt();
             scanner.nextLine();
-            client.setClientID(clientID);
+            client = new USMDao().selectAllFromClientWhereID(clientID);
 
-            if (!new USMDao().selectIDWhereID(client.getClientID())) {
+            if (client.getClientID() == 0) {
                 String pwConfirm;
                 while (true) {
                     System.out.print("비밀번호 : ");
