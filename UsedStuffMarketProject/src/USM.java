@@ -6,8 +6,6 @@ public class USM {
     private final Scanner scanner = new Scanner(System.in);
     private int clientID;
     private String clientPW;
-    private String clientName;
-    private String regionID;
     private ClientVO client;
 
     public void startProgram() {
@@ -109,7 +107,7 @@ public class USM {
     //내지역 모든상품 조회
     private void seeMyRegion() {
         List<SearchVO> searchLists;
-        searchLists = new USMDao().selectProductJoinRegion(regionID);
+        searchLists = new USMDao().selectProductJoinRegion(client.getRegionID());
         showSearchResult(searchLists);
         lookupOrMain(searchLists);
     }
@@ -218,7 +216,7 @@ public class USM {
         price = scanner.nextInt();
         scanner.nextLine();
 
-        new USMDao().insertProduct(productName, productDescription, clientID, regionID, price);
+        new USMDao().insertProduct(productName, productDescription, client.getClientID(), client.getRegionID(), price);
         System.out.println("등록되었습니다.");
         programMain();
     }
@@ -254,6 +252,7 @@ public class USM {
     //회원가입
     public void signUp() {
         client = null;
+        String regionID;
         System.out.println("회원가입");
         while (true) {
             System.out.print("전화번호 : ");
@@ -276,7 +275,7 @@ public class USM {
                     }
                 }
                 System.out.print("이름(닉네임) : ");
-                clientName = scanner.nextLine();
+                String clientName = scanner.nextLine();
                 System.out.print("[1.서울특별시\t2.인천광역시\t3.대전광역시\t4.울산광역시\t]\n" +
                         "[5.부산광역시\t6.광주광역시\t7.경기도\t\t8.강원도\t\t]\n" +
                         "[9.충청도\t10.전라도\t11.경상도\t12.제주도\t]\n " +
