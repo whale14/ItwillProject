@@ -92,20 +92,21 @@ public class USMDao {
     }
 
     public List<SearchVO> selectProductWithKeyword(String searchKeyword) {
-        List<SearchVO> searchLists = null;
+        List<SearchVO> searchLists;
         searchLists = new ArrayList<SearchVO>();
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT c.CLIENT_NAME, p.PRODUCT_NAME, p.PRICE, c.RELIABILITY ");
+            sql.append("SELECT p.PRODUCT_ID, c.CLIENT_NAME, p.PRODUCT_NAME, p.PRICE, c.RELIABILITY ");
             sql.append(" FROM CLIENT_INFO C JOIN PRODUCT P ");
             sql.append(" ON c.CLIENT_ID = p.CLIENT_ID ");
-            sql.append(" AND p.PRODUCT_NAME LIKE '%" + searchKeyword +"%'");
+            sql.append(" AND p.PRODUCT_NAME LIKE '%" + searchKeyword + "%'");
             preparedStatement = connection.prepareStatement(sql.toString());
 //            preparedStatement.setString(1, searchKeyword);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                SearchVO vo = new SearchVO(resultSet.getString("CLIENT_NAME"),
+                SearchVO vo = new SearchVO(resultSet.getInt("PRODUCT_ID"),
+                        resultSet.getString("CLIENT_NAME"),
                         resultSet.getString("PRODUCT_NAME"),
                         resultSet.getInt("PRICE"),
                         resultSet.getInt("RELIABILITY")
@@ -120,6 +121,112 @@ public class USMDao {
         return searchLists;
     }
 
+
+    public ProductVO selectAllProductWhereProductID(int productID) {
+        ProductVO product = null;
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT * ");
+            sql.append(" FROM PRODUCT ");
+            sql.append(" WHERE PRODUCT_ID = ?");
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.setInt(1, productID);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                product = new ProductVO(resultSet.getInt("PRODUCT_ID"),
+                        resultSet.getString("PRODUCT_NAME"),
+                        resultSet.getString("PRODUCT_DESCRIPTION"),
+                        resultSet.getString("REGION_ID"),
+                        resultSet.getInt("CLIENT_ID"),
+                        resultSet.getInt("PRICE")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement, resultSet);
+        }
+        return product;
+    }
+
+    public List<SearchVO> selectProductJoinRegionWithKeyword(String keyword) {
+        List<SearchVO> searchLists;
+        searchLists = new ArrayList<>();
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT p.PRODUCT_ID, c.CLIENT_NAME, p.PRODUCT_NAME, p.PRICE, c.RELIABILITY ");
+            sql.append(" FROM CLIENT_INFO c JOIN PRODUCT p ");
+            sql.append(" ON c.REGION_ID = p.REGION_ID");
+            sql.append(" AND p.PRODUCT_NAME LIKE '%" + keyword + "%'");
+            preparedStatement = connection.prepareStatement(sql.toString());
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                SearchVO vo = new SearchVO(resultSet.getInt("PRODUCT_ID"),
+                        resultSet.getString("CLIENT_NAME"),
+                        resultSet.getString("PRODUCT_NAME"),
+                        resultSet.getInt("PRICE"),
+                        resultSet.getInt("RELIABILITY")
+                );
+                searchLists.add(vo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement, resultSet);
+        }
+        return searchLists;
+    }
+    public List<SearchVO> selectProductJoinRegion(String regionID) {
+        List<SearchVO> searchLists;
+        searchLists = new ArrayList<>();
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT p.PRODUCT_ID, c.CLIENT_NAME, p.PRODUCT_NAME, p.PRICE, c.RELIABILITY ");
+            sql.append(" FROM CLIENT_INFO c JOIN PRODUCT p ");
+            sql.append(" ON c.REGION_ID = p.REGION_ID");
+            preparedStatement = connection.prepareStatement(sql.toString());
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                SearchVO vo = new SearchVO(resultSet.getInt("PRODUCT_ID"),
+                        resultSet.getString("CLIENT_NAME"),
+                        resultSet.getString("PRODUCT_NAME"),
+                        resultSet.getInt("PRICE"),
+                        resultSet.getInt("RELIABILITY")
+                );
+                searchLists.add(vo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement, resultSet);
+        }
+        return searchLists;
+    }
+
+    public int insertProduct(String productName, String productDescription, int clientID, String regionID, int price) {
+        int result = 0;
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("INSERT INTO PRODUCT ");
+            sql.append(" VALUES ((select max(product_id)+1 from product)" + ", '");
+            sql.append(productName).append("', '");
+            sql.append(productDescription).append("', ");
+            sql.append(clientID).append(", ");
+            sql.append(price).append(", '");
+            sql.append(regionID).append("')");
+            preparedStatement = connection.prepareStatement(sql.toString());
+            result = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement);
+        }
+        return result;
+    }
 
     private void close(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet) {
         try {

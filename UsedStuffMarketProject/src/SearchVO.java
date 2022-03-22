@@ -1,4 +1,5 @@
 public class SearchVO {
+    private int productID;
     private String clientName;
     private String productName;
     private int price;
@@ -7,7 +8,8 @@ public class SearchVO {
     public SearchVO() {
     }
 
-    public SearchVO(String clientName, String productName, int price, int reliable) {
+    public SearchVO(int productID, String clientName, String productName, int price, int reliable) {
+        this.productID = productID;
         this.clientName = clientName;
         this.productName = productName;
         this.price = price;
@@ -18,6 +20,13 @@ public class SearchVO {
         return clientName;
     }
 
+    public int getProductID() {
+        return productID;
+    }
+
+    public void setProductID(int productID) {
+        this.productID = productID;
+    }
 
     public void setClientName(String clientName) {
         this.clientName = clientName;
@@ -45,5 +54,16 @@ public class SearchVO {
 
     public void setReliable(int reliable) {
         this.reliable = reliable;
+    }
+
+    @Override
+    public String toString() {
+        return "SearchVO{" +
+                "productID=" + productID +
+                ", clientName='" + clientName + '\'' +
+                ", productName='" + productName + '\'' +
+                ", price=" + price +
+                ", reliable=" + reliable +
+                '}';
     }
 }

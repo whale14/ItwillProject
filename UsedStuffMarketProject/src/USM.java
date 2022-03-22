@@ -9,7 +9,6 @@ public class USM {
     private String clientName;
     private String regionID;
     private ClientVO client;
-    private ProductVO product;
 
     public void startProgram() {
 
@@ -44,7 +43,7 @@ public class USM {
                 break;
             case 2:
                 scanner.nextLine();
-//                productRegistration();
+                productRegistration();
                 break;
             case 3:
                 scanner.nextLine();
@@ -58,6 +57,7 @@ public class USM {
         }
     }
 
+    //검색 메인
     public void searchMain() {
         System.out.println("검색조건을 입력해주세요");
         System.out.println("1.전지역 키워드 검색");
@@ -71,11 +71,11 @@ public class USM {
                 break;
             case 2:
                 scanner.nextLine();
-//                searchRegion();
+                searchRegion();
                 break;
             case 3:
                 scanner.nextLine();
-//                viewMyArea();
+                seeMyRegion();
                 break;
             default:
                 scanner.nextLine();
@@ -87,12 +87,35 @@ public class USM {
 
     //전지역 키워드 검색
     public void searchGlobal() {
-        List<SearchVO> searchLists = null;
+        List<SearchVO> searchLists;
         String searchKeyword;
         System.out.print("검색어:");
         searchKeyword = scanner.nextLine();
-        searchLists = (new USMDao().selectProductWithKeyword(searchKeyword));
+        searchLists = new USMDao().selectProductWithKeyword(searchKeyword);
+        showSearchResult(searchLists);
+        lookupOrMain(searchLists);
 
+    }
+    //내지역 키워드 검색
+    private void searchRegion() {
+        List<SearchVO> searchLists;
+        String searchKeyword;
+        System.out.print("검색어:");
+        searchKeyword = scanner.nextLine();
+        searchLists = new USMDao().selectProductJoinRegionWithKeyword(searchKeyword);
+        showSearchResult(searchLists);
+        lookupOrMain(searchLists);
+    }
+    //내지역 모든상품 조회
+    private void seeMyRegion() {
+        List<SearchVO> searchLists;
+        searchLists = new USMDao().selectProductJoinRegion(regionID);
+        showSearchResult(searchLists);
+        lookupOrMain(searchLists);
+    }
+
+    //검색결과 리스트출력
+    private void showSearchResult(List<SearchVO> searchLists) {
         System.out.println("====================");
         String columnNo = "번호\t";
         String columnTitle = "제목";
@@ -110,30 +133,127 @@ public class USM {
             String reliable = String.format("%3s", vo.getReliable());
             System.out.println(i++ + ".\t|" + title + "|" + name + "|" + price + "|" + reliable);
         }
-        searchNext(searchLists);
-
     }
-
-    public void searchNext(List<SearchVO> searchLists) {
+    //상품조회 or 메인
+    public void lookupOrMain(List<SearchVO> searchLists) {
         System.out.println("====================");
         System.out.println("1~9.조회\t0.돌아가기");
         int ifNo = scanner.nextInt();
         scanner.nextLine();
         if (ifNo <= 9 && ifNo >0) {
-            seeDetail(searchLists);
+            seeDetail(searchLists, ifNo);
+            goChatOrMain();
+
         }else if(ifNo == 0) {
             programMain();
         }else {
             System.out.println("잘못입력하셨습니다. 다시입력해주세요.");
-            searchNext(searchLists);
+            lookupOrMain(searchLists);
+        }
+    }
+    //상품 상세출력
+    private void productDetailForm(ProductVO product) {
+        System.out.println(product.getProductName());
+        System.out.println(product.getProductDescription());
+        System.out.println("희망가격:" + product.getPrice() + "원");
+        System.out.println("판매자 연락처:0" + product.getProductID());
+    }
+    //상품 상세 페이지
+    private void seeDetail(List<SearchVO> searchLists, int ifNo) {
+        System.out.println("====================");
+        SearchVO searchVO = searchLists.get(ifNo-1);
+        ProductVO product;
+        int productID = searchVO.getProductID();
+        product = new USMDao().selectAllProductWhereProductID(productID);
+        //정보 출력
+        productDetailForm(product);
+
+    }
+    //채팅 or 메인
+    private void goChatOrMain() {
+        System.out.println("1.채팅하기\t0.메인으로 돌아가기");
+        switch (scanner.nextInt()){
+            case 1 :
+                chat();
+                break;
+            case 0 :
+                programMain();
+                break;
+            default:
+                System.out.println("잘못입력했습니다. 다시입력해주세요");
+                goChatOrMain();
+                break;
+        }
+    }
+    //채팅
+    private void chat() {
+        System.out.println("채팅");
+    }
+
+    //판매 등록
+    private void productRegistration() {
+        String productName;
+        String productDescription;
+        int price;
+
+        StringBuilder descriptionBuilder = new StringBuilder();
+        System.out.println("====================");
+        System.out.print("제목:");
+        productName = scanner.nextLine();
+        System.out.println("내용(작성완료 : 빈줄에 '@end' 입력):");
+
+        while (true) {
+            String description = scanner.nextLine();
+            if (description.equals("@end")) {
+                descriptionBuilder.delete(descriptionBuilder.length()-22, descriptionBuilder.length());
+                break;
+            }
+            else {
+                descriptionBuilder.append(description).append("'||CHR(10)||CHR(13)||'");
+            }
+        }
+        System.out.println(descriptionBuilder);
+        productDescription = descriptionBuilder.toString();
+        System.out.println("희망가격(숫자만입력):");
+        price = scanner.nextInt();
+        scanner.nextLine();
+
+        new USMDao().insertProduct(productName, productDescription, clientID, regionID, price);
+        System.out.println("등록되었습니다.");
+        programMain();
+    }
+
+    //로그인
+    public void login() {
+        client = new ClientVO();
+        System.out.println("로그인");
+        while (true) {
+            System.out.print("전화번호 : ");
+            clientID = scanner.nextInt();
+            scanner.nextLine();
+            client.setClientID(clientID);
+
+            if (new USMDao().selectIDWhereID(client.getClientID())) {
+                while (true) {
+                    System.out.println("비밀번호를 입력해주세요");
+                    System.out.print("비밀번호 : ");
+                    clientPW = scanner.nextLine();
+                    client.setClientPW(clientPW);
+                    if (new USMDao().selectPWWhereID(client.getClientID(), client.getClientPW())) {
+                        System.out.println("로그인성공");
+                        break;
+                    } else {
+                        System.out.println("잘못 입력하셨습니다. 다시입력해주세요");
+                    }
+                }
+                break;
+            } else {
+                System.out.println("없는 아이디입니다. 다시입력해주세요.");
+            }
         }
     }
 
-    //상품 상세 페이지
-    private void seeDetail(List<SearchVO> searchLists) {
-
-    }
-
+    //회원가입
     public void signUp() {
         client = new ClientVO();
         System.out.println("회원가입");
@@ -221,32 +341,5 @@ public class USM {
         }
     }
 
-    public void login() {
-        client = new ClientVO();
-        System.out.println("로그인");
-        while (true) {
-            System.out.print("전화번호 : ");
-            clientID = scanner.nextInt();
-            scanner.nextLine();
-            client.setClientID(clientID);
 
-            if (new USMDao().selectIDWhereID(client.getClientID())) {
-                while (true) {
-                    System.out.println("비밀번호를 입력해주세요");
-                    System.out.print("비밀번호 : ");
-                    clientPW = scanner.nextLine();
-                    client.setClientPW(clientPW);
-                    if (new USMDao().selectPWWhereID(client.getClientID(), client.getClientPW())) {
-                        System.out.println("로그인성공");
-                        break;
-                    } else {
-                        System.out.println("잘못 입력하셨습니다. 다시입력해주세요");
-                    }
-                }
-                break;
-            } else {
-                System.out.println("없는 아이디입니다. 다시입력해주세요.");
-            }
-        }
-    }
 }
