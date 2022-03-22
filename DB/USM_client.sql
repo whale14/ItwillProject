@@ -7,7 +7,7 @@ CREATE TABLE CLIENT_INFO(
     CLIENT_PW VARCHAR2(30) NOT NULL,                                     -- 비밀번호
     CLIENT_NAME VARCHAR2(50) NOT NULL,                                   -- 회원명
     REGION_ID VARCHAR2(50) NOT NULL,                                      -- 지역ID
-    RELIABLITY NUMBER(3) DEFAULT 0 CHECK(RELIABLITY BETWEEN 0 AND 100) -- 신뢰도 
+    RELIABILITY NUMBER(3) DEFAULT 0 CHECK(RELIABILITY BETWEEN 0 AND 100) -- 신뢰도 
 )
 ;
 
