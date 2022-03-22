@@ -1,5 +1,7 @@
 import java.sql.*;
 
+import com.sun.tools.javac.util.List;
+
 public class USMDao {
     private final static String DRIVER = "oracle.jdbc.OracleDriver";
     private final String URL = "jdbc:oracle:thin:@localhost:1521:XE";
@@ -28,6 +30,7 @@ public class USMDao {
             signInSQL.append("WHERE CLIENT_ID = ?");
             preparedStatement = connection.prepareStatement(signInSQL.toString());
             preparedStatement.setInt(1, id);
+            List<Product> products;
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 System.out.println(resultSet.getString("CLIENT_ID"));

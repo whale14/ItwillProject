@@ -11,8 +11,15 @@ SELECT c.client_name, p.product_name, P.PRICE ,c.reliablity
 FROM REGION R, client_info C, PRODUCT P
 WHERE r.region_id = C.REGION_ID 
 AND C.CLIENT_ID = P.CLIENT_ID
-AND p.product_name LIKE '%고%'  
+AND p.product_name LIKE '%검색어%'  
 ;
+
+SELECT c.client_name, p.product_name, p.PRICE ,c.reliability
+FROM client_info C JOIN product P
+ON c.client_id = p.client_id
+AND p.product_name like '%검색어%'
+;
+
 
 
 
