@@ -24,7 +24,7 @@ AND p.product_name like '%검색어%'
 
 
 /*2. 지역+ 검색어로 검색*/
-SELECT c.client_name, p.product_name, P.PRICE ,c.reliablity
+SELECT c.client_name, p.product_name, P.PRICE ,c.reliability
 FROM REGION R, client_info C, PRODUCT P
 WHERE r.region_id = C.REGION_ID 
 AND C.CLIENT_ID = P.CLIENT_ID
