@@ -159,6 +159,7 @@ public class USMDao {
         }
         return searchLists;
     }
+
     public List<SearchVO> selectProductJoinRegion(String regionID) {
         List<SearchVO> searchLists;
         searchLists = new ArrayList<>();
@@ -237,6 +238,206 @@ public class USMDao {
         }
         return products;
     }
+
+    public void updateProductSetProductNameWhereProductID(int productID, String newProductName) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE PRODUCT ");
+            sql.append(" SET PRODUCT_NAME = '").append(newProductName).append("' ");
+            sql.append(" WHERE PRODUCT_ID = ").append(productID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("수정완료");
+            close(connection, preparedStatement);
+        }
+    }
+
+    public void updateProductSetProductDescriptionWhereProductID(int productID, String newProductDescription) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE PRODUCT ");
+            sql.append(" SET PRODUCT_DESCRIPTION = '").append(newProductDescription).append("' ");
+            sql.append(" WHERE PRODUCT_ID = ").append(productID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("수정완료");
+            close(connection, preparedStatement);
+        }
+    }
+
+    public void updateProductSetPriceWhereProductID(int productID, int newPrice) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE PRODUCT ");
+            sql.append(" SET PRICE = ").append(newPrice);
+            sql.append(" WHERE PRODUCT_ID = ").append(productID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("수정완료");
+            close(connection, preparedStatement);
+        }
+    }
+
+    public void deleteProductWhereProductID(int productID) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("DELETE PRODUCT ");
+            sql.append(" WHERE PRODUCT_ID = ").append(productID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("삭제완료");
+            close(connection, preparedStatement);
+        }
+    }
+
+    public void deleteClientWhereClientID(int clientID) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("DELETE CLIENT_INFO ");
+            sql.append(" WHERE CLIENT_ID = ").append(clientID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("계정삭제완료");
+            close(connection, preparedStatement);
+        }
+    }
+
+    public int updateClientInfoSetClientIDWhereClientID(int clientID, int newClientID) {
+        int result = 0;
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE CLIENT_INFO ");
+            sql.append(" SET CLIENT_ID = ").append(newClientID);
+            sql.append(" WHERE CLIENT_ID = ").append(clientID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            result = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement);
+        }
+        return result;
+    }
+
+    public void updateClientInfoSetClientNameWhereClientID(int clientID, String newClientName) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE CLIENT_INFO ");
+            sql.append(" SET CLIENT_NAME = '").append(newClientName).append("' ");
+            sql.append(" WHERE CLIENT_ID = ").append(clientID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement);
+        }
+    }
+
+    public int updateClientInfoSetClientPWWhereClientID(int clientID, String newClientPW) {
+        int result = 0;
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE CLIENT_INFO ");
+            sql.append(" SET CLIENT_PW = '").append(newClientPW).append("' ");
+            sql.append(" WHERE CLIENT_ID = ").append(clientID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            result = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement);
+        }
+        return result;
+    }
+
+    public void deleteProductWhereClientID(int clientID) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("DELETE PRODUCT ");
+            sql.append(" WHERE CLIENT_ID = ").append(clientID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("계정삭제완료");
+            close(connection, preparedStatement);
+        }
+    }
+
+    public void updateProductSetClientIDWhereClientID(int clientID, int newClientID) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE PRODUCT ");
+            sql.append(" SET CLIENT_ID = ").append(newClientID);
+            sql.append(" WHERE CLIENT_ID = ").append(clientID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement);
+        }
+    }
+
+    public void updateProductSetRegionIDWhereClientID(int clientID, String newRegion) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE PRODUCT ");
+            sql.append(" SET REGION_ID = '").append(newRegion).append("'");
+            sql.append(" WHERE CLIENT_ID = ").append(clientID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement);
+        }
+    }
+
+    public void updateClientInfoSetRegionIDWhereClientID(int clientID, String newRegion) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE CLIENT_INFO ");
+            sql.append(" SET REGION_ID = '").append(newRegion).append("'");
+            sql.append(" WHERE CLIENT_ID = ").append(clientID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement);
+        }
+    }
+
     private void close(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet) {
         try {
             resultSet.close();
@@ -256,71 +457,4 @@ public class USMDao {
         }
     }
 
-
-    public void updateProductName(int productID, String newProductName) {
-        try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE PRODUCT ");
-            sql.append(" SET PRODUCT_NAME = '").append(newProductName).append("' ");
-            sql.append(" WHERE PRODUCT_ID = ").append(productID);
-            preparedStatement = connection.prepareStatement(sql.toString());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            System.out.println("수정완료");
-            close(connection, preparedStatement);
-        }
-    }
-
-    public void updateProductDescription(int productID, String newProductDescription) {
-        try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE PRODUCT ");
-            sql.append(" SET PRODUCT_DESCRIPTION = '").append(newProductDescription).append("' ");
-            sql.append(" WHERE PRODUCT_ID = ").append(productID);
-            preparedStatement = connection.prepareStatement(sql.toString());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            System.out.println("수정완료");
-            close(connection, preparedStatement);
-        }
-    }
-
-    public void updateProductPrice(int productID, int newPrice) {
-        try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE PRODUCT ");
-            sql.append(" SET PRICE = ").append(newPrice);
-            sql.append(" WHERE PRODUCT_ID = ").append(productID);
-            preparedStatement = connection.prepareStatement(sql.toString());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            System.out.println("수정완료");
-            close(connection, preparedStatement);
-        }
-    }
-
-    public void deleteProduct(int productID) {
-        try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            StringBuilder sql = new StringBuilder();
-            sql.append("DELETE PRODUCT ");
-            sql.append(" WHERE PRODUCT_ID = ").append(productID);
-            preparedStatement = connection.prepareStatement(sql.toString());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            System.out.println("삭제완료");
-            close(connection, preparedStatement);
-        }
-    }
 }
