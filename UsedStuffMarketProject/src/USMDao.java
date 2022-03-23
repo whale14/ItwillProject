@@ -130,7 +130,7 @@ public class USMDao {
         return product;
     }
 
-    public List<SearchVO> selectProductJoinRegionWithKeyword(String keyword) {
+    public List<SearchVO> selectProductJoinRegionWithKeyword(String keyword, String regionID) {
         List<SearchVO> searchLists;
         searchLists = new ArrayList<>();
         try {
@@ -138,7 +138,8 @@ public class USMDao {
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT p.PRODUCT_ID, c.CLIENT_NAME, p.PRODUCT_NAME, p.PRICE, c.RELIABILITY ");
             sql.append(" FROM CLIENT_INFO c JOIN PRODUCT p ");
-            sql.append(" ON c.REGION_ID = p.REGION_ID");
+            sql.append(" ON c.CLIENT_ID = p.CLIENT_ID");
+            sql.append(" AND p.REGION_ID = '").append(regionID).append("' ");
             sql.append(" AND p.PRODUCT_NAME LIKE '%" + keyword + "%'");
             preparedStatement = connection.prepareStatement(sql.toString());
             resultSet = preparedStatement.executeQuery();
@@ -166,7 +167,7 @@ public class USMDao {
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT p.PRODUCT_ID, c.CLIENT_NAME, p.PRODUCT_NAME, p.PRICE, c.RELIABILITY ");
             sql.append(" FROM CLIENT_INFO c JOIN PRODUCT p ");
-            sql.append(" ON c.REGION_ID = p.REGION_ID");
+            sql.append(" ON c.CLIENT_ID = p.CLIENT_ID");
             sql.append(" AND p.REGION_ID = '" + regionID +"'");
             preparedStatement = connection.prepareStatement(sql.toString());
             resultSet = preparedStatement.executeQuery();

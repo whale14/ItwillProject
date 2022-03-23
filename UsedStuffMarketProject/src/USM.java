@@ -100,7 +100,7 @@ public class USM {
         String searchKeyword;
         System.out.print("검색어:");
         searchKeyword = scanner.nextLine();
-        searchLists = new USMDao().selectProductJoinRegionWithKeyword(searchKeyword);
+        searchLists = new USMDao().selectProductJoinRegionWithKeyword(searchKeyword, client.getRegionID());
         showSearchResult(searchLists);
         lookupOrMain(searchLists);
     }
@@ -210,7 +210,6 @@ public class USM {
                 descriptionBuilder.append(description).append("'||CHR(10)||CHR(13)||'");
             }
         }
-        System.out.println(descriptionBuilder);
         productDescription = descriptionBuilder.toString();
         System.out.println("희망가격(숫자만입력):");
         price = scanner.nextInt();
