@@ -94,6 +94,7 @@ public class USM {
         lookupOrMain(searchLists);
 
     }
+
     //내지역 키워드 검색
     private void searchRegion() {
         List<SearchVO> searchLists;
@@ -104,6 +105,7 @@ public class USM {
         showSearchResult(searchLists);
         lookupOrMain(searchLists);
     }
+
     //내지역 모든상품 조회
     private void seeMyRegion() {
         List<SearchVO> searchLists;
@@ -120,46 +122,50 @@ public class USM {
         String columnName = "판매자";
         String columnPrice = "가격";
         String columnReliable = "신뢰도";
+        System.out.println("검색결과:" + searchLists.size() + "개");
         System.out.println(columnNo + " | " + columnTitle + " | " + columnName + " | " + columnPrice + " | " + columnReliable);
 
         int i = 1;
         for (SearchVO vo : searchLists) {
-
             String title = String.format("%-20s", vo.getProductName());
             String name = String.format("%-7s", vo.getClientName());
             String price = String.format("%9s", vo.getPrice());
             String reliable = String.format("%3s", vo.getReliable());
             System.out.println(i++ + ".\t|" + title + "|" + name + "|" + price + "|" + reliable);
         }
+
     }
+
     //상품조회 or 메인
     public void lookupOrMain(List<SearchVO> searchLists) {
         System.out.println("====================");
         System.out.println("1~9.조회\t0.돌아가기");
         int ifNo = scanner.nextInt();
         scanner.nextLine();
-        if (ifNo <= 9 && ifNo >0) {
+        if (ifNo <= searchLists.size() && ifNo > 0) {
             seeDetail(searchLists, ifNo);
             goChatOrMain();
 
-        }else if(ifNo == 0) {
+        } else if (ifNo == 0) {
             programMain();
-        }else {
+        } else {
             System.out.println("잘못입력하셨습니다. 다시입력해주세요.");
             lookupOrMain(searchLists);
         }
     }
+
     //상품 상세출력
     private void productDetailForm(ProductVO product) {
         System.out.println(product.getProductName());
         System.out.println(product.getProductDescription());
         System.out.println("희망가격:" + product.getPrice() + "원");
-        System.out.println("판매자 연락처:0" + product.getProductID());
+        System.out.println("판매자 연락처:0" + product.getClientID());
     }
+
     //상품 상세 페이지
     private void seeDetail(List<SearchVO> searchLists, int ifNo) {
         System.out.println("====================");
-        SearchVO searchVO = searchLists.get(ifNo-1);
+        SearchVO searchVO = searchLists.get(ifNo - 1);
         ProductVO product;
         int productID = searchVO.getProductID();
         product = new USMDao().selectAllProductWhereProductID(productID);
@@ -167,14 +173,15 @@ public class USM {
         productDetailForm(product);
 
     }
+
     //채팅 or 메인
     private void goChatOrMain() {
         System.out.println("1.채팅하기\t0.메인으로 돌아가기");
-        switch (scanner.nextInt()){
-            case 1 :
+        switch (scanner.nextInt()) {
+            case 1:
                 chat();
                 break;
-            case 0 :
+            case 0:
                 programMain();
                 break;
             default:
@@ -183,6 +190,7 @@ public class USM {
                 break;
         }
     }
+
     //채팅
     private void chat() {
         System.out.println("채팅");
@@ -203,10 +211,9 @@ public class USM {
         while (true) {
             String description = scanner.nextLine();
             if (description.equals("@end")) {
-                descriptionBuilder.delete(descriptionBuilder.length()-22, descriptionBuilder.length());
+                descriptionBuilder.delete(descriptionBuilder.length() - 22, descriptionBuilder.length());
                 break;
-            }
-            else {
+            } else {
                 descriptionBuilder.append(description).append("'||CHR(10)||CHR(13)||'");
             }
         }
