@@ -13,6 +13,7 @@ public class ClientVO {
         this.clientName = clientName;
         this.regionID = regionID;
         this.reliable = reliable;
+        setReliable(50);
     }
 
     public int getClientID() {

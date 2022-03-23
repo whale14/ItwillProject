@@ -112,7 +112,7 @@ public class USM {
         System.out.println("무엇을 하시겠습니까?");
         System.out.println("1.중고검색");
         System.out.println("2.판매등록");
-        System.out.println("3.내정보(프로필/판매상품 관리");
+        System.out.println("3.내정보(프로필/판매상품 관리)");
         System.out.print("0.프로그램 종료\n:");
         switch (scanner.nextInt()) {
             case 1:
@@ -145,7 +145,8 @@ public class USM {
         System.out.println("검색조건을 입력해주세요");
         System.out.println("1.전지역 키워드 검색");
         System.out.println("2.내지역 키워드 검색");
-        System.out.print("3.내지역 상품 전체 보기\n: ");
+        System.out.println("3.내지역 상품 전체 보기");
+        System.out.print("0.돌아가기\n: ");
 
         switch (scanner.nextInt()) {
             case 1:
@@ -160,10 +161,14 @@ public class USM {
                 scanner.nextLine();
                 seeMyRegion();
                 break;
+            case 0:
+                scanner.nextLine();
+                programMain();
+                break;
             default:
                 scanner.nextLine();
                 System.out.println("잘못입력하셨습니다. 다시입력해주세요");
-                programMain();
+                searchMain();
                 break;
         }
     }
@@ -205,18 +210,20 @@ public class USM {
         String columnNo = "번호\t";
         String columnTitle = "제목";
         String columnName = "판매자";
+        String columnRegion = "지역";
         String columnPrice = "가격";
         String columnReliable = "신뢰도";
         System.out.println("검색결과:" + searchLists.size() + "개");
-        System.out.println(columnNo + " | " + columnTitle + " | " + columnName + " | " + columnPrice + " | " + columnReliable);
+        System.out.println(columnNo + " | " + columnTitle + " | " + columnName + " | " + columnRegion + " | " + columnPrice + " | " + columnReliable);
 
         int i = 1;
         for (SearchVO vo : searchLists) {
             String title = String.format("%-20s", vo.getProductName());
             String name = String.format("%-7s", vo.getClientName());
+            String region = String.format("%-5s" ,vo.getRegionID());
             String price = String.format("%9s", vo.getPrice());
             String reliable = String.format("%3s", vo.getReliable());
-            System.out.println(i++ + ".\t|" + title + "|" + name + "|" + price + "|" + reliable);
+            System.out.println(i++ + ".\t|" + title + "|" + name + "|" + region + "|" + price + "|" + reliable);
         }
 
     }
@@ -282,6 +289,7 @@ public class USM {
     }
     //--------------------------------중고검색
 
+
     //--------------------------------판매등록
     private void productRegistration() {
         String productName;
@@ -290,10 +298,10 @@ public class USM {
 
         StringBuilder descriptionBuilder = new StringBuilder();
         System.out.println("====================");
+        System.out.println("판매등록");
         System.out.print("제목:");
         productName = scanner.nextLine();
         System.out.println("내용(작성완료 : 빈줄에 '@end' 입력):");
-
         while (true) {
             String description = scanner.nextLine();
             if (description.equals("@end")) {
@@ -313,6 +321,7 @@ public class USM {
         programMain();
     }
     //--------------------------------중고검색
+
 
     //--------------------------------내정보관리
     //내정보
@@ -377,8 +386,18 @@ public class USM {
                             break;
                         case 2:
                             scanner.nextLine();
-                            System.out.print("수정내용:");
-                            String newProductDescription = scanner.nextLine();
+                            System.out.println("수정내용(작성완료 : 빈줄에 '@end' 입력):");
+                            StringBuilder productDescription = new StringBuilder();
+                            while (true) {
+                                String description = scanner.nextLine();
+                                if (description.equals("@end")) {
+                                    productDescription.delete(productDescription.length() - 22, productDescription.length());
+                                    break;
+                                } else {
+                                    productDescription.append(description).append("'||CHR(10)||CHR(13)||'");
+                                }
+                            }
+                            String newProductDescription = productDescription.toString();
                             new USMDao().updateProductSetProductDescriptionWhereProductID(products.get(productIndex - 1).getProductID(), newProductDescription);
                             break;
                         case 3:
