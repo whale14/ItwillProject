@@ -153,7 +153,8 @@ public class USM {
         System.out.println("무엇을 하시겠습니까?");
         System.out.println("1.중고검색");
         System.out.println("2.판매등록");
-        System.out.print("3.내정보(프로필/판매상품 관리)\n :");
+        System.out.println("3.내정보(프로필/판매상품 관리");
+        System.out.print("0.프로그램 종료\n:");
         switch (scanner.nextInt()) {
             case 1:
                 scanner.nextLine();
@@ -166,6 +167,10 @@ public class USM {
             case 3:
                 scanner.nextLine();
                 myProfile();
+                break;
+            case 0:
+                scanner.nextLine();
+                System.out.println("이용해주셔서 감사합니다.");
                 break;
             default:
                 scanner.nextLine();

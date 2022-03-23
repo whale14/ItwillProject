@@ -20,7 +20,7 @@ public class USMDao {
         }
     }
 
-    //·Î±×ÀÎ
+    //ë¡œê·¸ì¸
     public ClientVO selectAllFromClientWhereID(int id) {
         ClientVO client = new ClientVO();
         try {
@@ -269,7 +269,7 @@ public class USMDao {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("¼öÁ¤¿Ï·á");
+            System.out.println("ìˆ˜ì •ì™„ë£Œ");
             close(connection, preparedStatement);
         }
     }
@@ -286,7 +286,7 @@ public class USMDao {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("¼öÁ¤¿Ï·á");
+            System.out.println("ìˆ˜ì •ì™„ë£Œ");
             close(connection, preparedStatement);
         }
     }
@@ -303,7 +303,7 @@ public class USMDao {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("¼öÁ¤¿Ï·á");
+            System.out.println("ìˆ˜ì •ì™„ë£Œ");
             close(connection, preparedStatement);
         }
     }
@@ -319,7 +319,7 @@ public class USMDao {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("»èÁ¦¿Ï·á");
+            System.out.println("ì‚­ì œì™„ë£Œ");
             close(connection, preparedStatement);
         }
     }
