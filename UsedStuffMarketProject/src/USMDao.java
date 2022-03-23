@@ -78,17 +78,17 @@ public class USMDao {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT p.PRODUCT_ID, c.CLIENT_NAME, p.PRODUCT_NAME, p.PRICE, c.RELIABILITY ");
+            sql.append("SELECT p.PRODUCT_ID, c.CLIENT_NAME, p.PRODUCT_NAME,p.REGION_ID, p.PRICE, c.RELIABILITY ");
             sql.append(" FROM CLIENT_INFO C JOIN PRODUCT P ");
             sql.append(" ON c.CLIENT_ID = p.CLIENT_ID ");
             sql.append(" AND p.PRODUCT_NAME LIKE '%" + searchKeyword + "%'");
             preparedStatement = connection.prepareStatement(sql.toString());
-//            preparedStatement.setString(1, searchKeyword);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 SearchVO vo = new SearchVO(resultSet.getInt("PRODUCT_ID"),
                         resultSet.getString("CLIENT_NAME"),
                         resultSet.getString("PRODUCT_NAME"),
+                        resultSet.getString("REGION_ID"),
                         resultSet.getInt("PRICE"),
                         resultSet.getInt("RELIABILITY")
                 );
@@ -136,7 +136,7 @@ public class USMDao {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT p.PRODUCT_ID, c.CLIENT_NAME, p.PRODUCT_NAME, p.PRICE, c.RELIABILITY ");
+            sql.append("SELECT p.PRODUCT_ID, c.CLIENT_NAME, p.PRODUCT_NAME, p.REGION_ID, p.PRICE, c.RELIABILITY ");
             sql.append(" FROM CLIENT_INFO c JOIN PRODUCT p ");
             sql.append(" ON c.CLIENT_ID = p.CLIENT_ID");
             sql.append(" AND p.REGION_ID = '").append(regionID).append("' ");
@@ -147,6 +147,7 @@ public class USMDao {
                 SearchVO vo = new SearchVO(resultSet.getInt("PRODUCT_ID"),
                         resultSet.getString("CLIENT_NAME"),
                         resultSet.getString("PRODUCT_NAME"),
+                        resultSet.getString("REGION_ID"),
                         resultSet.getInt("PRICE"),
                         resultSet.getInt("RELIABILITY")
                 );
@@ -166,7 +167,7 @@ public class USMDao {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT p.PRODUCT_ID, c.CLIENT_NAME, p.PRODUCT_NAME, p.PRICE, c.RELIABILITY ");
+            sql.append("SELECT p.PRODUCT_ID, c.CLIENT_NAME, p.PRODUCT_NAME, p.REGION_ID, p.PRICE, c.RELIABILITY ");
             sql.append(" FROM CLIENT_INFO c JOIN PRODUCT p ");
             sql.append(" ON c.CLIENT_ID = p.CLIENT_ID");
             sql.append(" AND p.REGION_ID = '" + regionID +"'");
@@ -176,6 +177,7 @@ public class USMDao {
                 SearchVO vo = new SearchVO(resultSet.getInt("PRODUCT_ID"),
                         resultSet.getString("CLIENT_NAME"),
                         resultSet.getString("PRODUCT_NAME"),
+                        resultSet.getString("REGION_ID"),
                         resultSet.getInt("PRICE"),
                         resultSet.getInt("RELIABILITY")
                 );

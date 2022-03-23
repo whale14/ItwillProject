@@ -2,16 +2,18 @@ public class SearchVO {
     private int productID;
     private String clientName;
     private String productName;
+    private String RegionID;
     private int price;
     private int reliable;
 
     public SearchVO() {
     }
 
-    public SearchVO(int productID, String clientName, String productName, int price, int reliable) {
+    public SearchVO(int productID, String clientName, String productName, String regionID, int price, int reliable) {
         this.productID = productID;
         this.clientName = clientName;
         this.productName = productName;
+        RegionID = regionID;
         this.price = price;
         this.reliable = reliable;
     }
@@ -38,6 +40,14 @@ public class SearchVO {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getRegionID() {
+        return RegionID;
+    }
+
+    public void setRegionID(String regionID) {
+        RegionID = regionID;
     }
 
     public int getPrice() {

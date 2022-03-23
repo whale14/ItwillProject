@@ -65,4 +65,16 @@ public class ProductVO {
     public void setPrice(int price) {
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+        return "ProductVO{" +
+                "productID=" + productID +
+                ", productName='" + productName + '\'' +
+                ", productDescription='" + productDescription + '\'' +
+                ", regionID='" + regionID + '\'' +
+                ", clientID=" + clientID +
+                ", price=" + price +
+                '}';
+    }
 }
