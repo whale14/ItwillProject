@@ -232,7 +232,7 @@ public class USM {
     //상품조회 or 메인
     public void lookupOrMain(List<SearchVO> searchLists) {
         System.out.println("------------------------\\");
-        System.out.println(" 1~n.상품상세 \t 0.돌아가기");
+        System.out.println(" 1~n.상품상세 \n 0.돌아가기");
         int ifNo = scanner.nextInt();
         scanner.nextLine();
         if (ifNo <= searchLists.size() && ifNo > 0) {
@@ -269,7 +269,7 @@ public class USM {
 
     //채팅 or 메인
     private void goChatOrMain() {
-        System.out.println(" 1.채팅하기 \t 0.메인으로 돌아가기");
+        System.out.println(" 1.채팅하기 \n 0.메인으로 돌아가기");
         switch (scanner.nextInt()) {
             case 1:
                 chat();
@@ -328,7 +328,7 @@ public class USM {
     //내정보
     private void myProfile() {
         System.out.println("------------------------\\");
-        System.out.println("  1.등록상품관리 \t 2.프로필관리 \t 3.계정삭제 \t 0.메인으로");
+        System.out.println(" 1.등록상품관리 \n 2.프로필관리 \n 3.계정삭제 \n 0.메인으로");
         switch (scanner.nextInt()) {
             case 1:
                 scanner.nextLine();
@@ -377,7 +377,7 @@ public class USM {
                 System.out.println("가격:" + products.get(productIndex - 1).getPrice());
                 while (true) {
                     System.out.println("------------------------\\");
-                    System.out.println(" 1.제목수정 \t 2.설명수정 \t 3.가격수정 \t 4.등록취소 \t 0.뒤로");
+                    System.out.println(" 1.제목수정 \n 2.설명수정 \n 3.가격수정 \n 4.등록취소 \n 0.뒤로");
                     switch (scanner.nextInt()) {
                         case 1:
                             scanner.nextLine();
