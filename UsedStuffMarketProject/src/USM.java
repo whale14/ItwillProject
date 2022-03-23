@@ -10,7 +10,7 @@ public class USM {
 
     public void startProgram() {
 
-        System.out.println("입력해주세요.\n1.로그인\t2.회원가입\t0.프로그램종료");
+        System.out.print("\t 1.로그인 \t 2.회원가입 \t 0.프로그램종료 \n >> ");
         switch (scanner.nextInt()) {
             case 1:
                 scanner.nextLine();
@@ -26,7 +26,7 @@ public class USM {
                 break;
             default:
                 scanner.nextLine();
-                System.out.println("잘못입력하셨습니다. 다시입력해주세요");
+                System.out.println("!! 잘못입력하셨습니다. 다시입력해주세요 !!");
                 startProgram();
                 break;
         }
@@ -36,27 +36,27 @@ public class USM {
     //로그인
     public void login() {
         client = new ClientVO();
-        System.out.println("====================");
-        System.out.println("로그인");
-        System.out.print("전화번호 : ");
+        System.out.println("------------------------\\");
+        System.out.println("\t    [로그인]");
+        System.out.print(" 전화번호 : ");
         clientID = scanner.nextInt();
         scanner.nextLine();
         client = new USMDao().selectAllFromClientWhereID(clientID);
         if (client.getClientID() != 0) {
             while (true) {
-                System.out.println("비밀번호를 입력해주세요");
-                System.out.print("비밀번호 : ");
+                //System.out.println("비밀번호를 입력해주세요");
+                System.out.print(" 비밀번호 : ");
                 clientPW = scanner.nextLine();
                 if (client.getClientPW().equals(clientPW)) {
-                    System.out.println("로그인성공");
+                    System.out.println(" . . . 로그인성공!");
                     break;
                 } else {
-                    System.out.println("잘못 입력하셨습니다. 다시입력해주세요");
+                    System.out.println("!! 잘못 입력하셨습니다. 다시입력해주세요 !!");
                 }
             }
             programMain();
         } else {
-            System.out.println("없는 아이디입니다.");
+            System.out.println("?? 없는 아이디입니다. ??");
             startProgram();
         }
     }
@@ -65,10 +65,10 @@ public class USM {
     public void signUp() {
         client = null;
         String regionID;
-        System.out.println("====================");
-        System.out.println("회원가입");
+        System.out.println("------------------------\\");
+        System.out.println("\t    회원가입");
         while (true) {
-            System.out.print("전화번호 : ");
+            System.out.print(" 전화번호 : ");
             clientID = scanner.nextInt();
             scanner.nextLine();
             client = new USMDao().selectAllFromClientWhereID(clientID);
@@ -76,18 +76,18 @@ public class USM {
             if (client.getClientID() == 0) {
                 String pwConfirm;
                 while (true) {
-                    System.out.print("비밀번호 : ");
+                    System.out.print(" 비밀번호 : ");
                     clientPW = scanner.nextLine();
-                    System.out.print("비밀번호 확인 : ");
+                    System.out.print(" 비밀번호 확인 : ");
                     pwConfirm = scanner.nextLine();
                     if (clientPW.equals(pwConfirm)) {
-                        System.out.println("비밀번호 설정완료.");
+                        System.out.println(" 비밀번호 설정완료.");
                         break;
                     } else {
-                        System.out.println("비밀번호가 다릅니다. 다시입력해주세요.");
+                        System.out.println(" 비밀번호가 다릅니다. 다시입력해주세요.");
                     }
                 }
-                System.out.print("이름(닉네임) : ");
+                System.out.print(" 이름(닉네임) : ");
                 String clientName = scanner.nextLine();
                 regionID = selectRegionID();
                 scanner.nextLine();
@@ -97,23 +97,23 @@ public class USM {
                 client.setRegionID(regionID);
                 client.setReliable(50);
                 new USMDao().insertClient(client);
-                System.out.println("회원가입 완료");
+                System.out.println(" . . . 회원가입 완료!");
                 login();
                 break;
             } else {
-                System.out.println("이미 존재하는 전화번호 입니다. 다시입력해주세요");
+                System.out.println(" 이미 존재하는 전화번호 입니다. 다시입력해주세요");
             }
         }
     }
 
     //메인화면
     public void programMain() {
-        System.out.println("====================");
-        System.out.println("무엇을 하시겠습니까?");
-        System.out.println("1.중고검색");
-        System.out.println("2.판매등록");
-        System.out.println("3.내정보(프로필/판매상품 관리)");
-        System.out.print("0.프로그램 종료\n:");
+        System.out.println("------------------------\\");
+        System.out.println(" 무엇을 하시겠습니까?");
+        System.out.println(" 1.중고검색");
+        System.out.println(" 2.판매등록");
+        System.out.println(" 3.내정보(프로필/판매상품 관리)");
+        System.out.print(" 0.프로그램 종료 \n >> ");
         switch (scanner.nextInt()) {
             case 1:
                 scanner.nextLine();
@@ -129,11 +129,11 @@ public class USM {
                 break;
             case 0:
                 scanner.nextLine();
-                System.out.println("이용해주셔서 감사합니다.");
+                System.out.println(" 이용해주셔서 감사합니다.");
                 break;
             default:
                 scanner.nextLine();
-                System.out.println("잘못입력하셨습니다. 다시입력해주세요");
+                System.out.println("!! 잘못입력하셨습니다. 다시입력해주세요 !!");
                 programMain();
                 break;
         }
@@ -142,11 +142,12 @@ public class USM {
     //--------------------------------중고검색
     //검색 메인
     public void searchMain() {
-        System.out.println("검색조건을 입력해주세요");
-        System.out.println("1.전지역 키워드 검색");
-        System.out.println("2.내지역 키워드 검색");
-        System.out.println("3.내지역 상품 전체 보기");
-        System.out.print("0.돌아가기\n: ");
+    	System.out.println("------------------------\\");
+        System.out.println(" 검색조건을 입력해주세요");
+        System.out.println(" 1.전지역 키워드 검색");
+        System.out.println(" 2.내지역 키워드 검색");
+        System.out.println(" 3.내지역 상품 전체 보기");
+        System.out.print(" 0.돌아가기 \n >>  ");
 
         switch (scanner.nextInt()) {
             case 1:
@@ -167,7 +168,7 @@ public class USM {
                 break;
             default:
                 scanner.nextLine();
-                System.out.println("잘못입력하셨습니다. 다시입력해주세요");
+                System.out.println("!! 잘못입력하셨습니다. 다시입력해주세요 !!");
                 searchMain();
                 break;
         }
@@ -177,7 +178,7 @@ public class USM {
     public void searchGlobal() {
         List<SearchVO> searchLists;
         String searchKeyword;
-        System.out.print("검색어:");
+        System.out.print(" 검색어: ");
         searchKeyword = scanner.nextLine();
         searchLists = new USMDao().selectProductWithKeyword(searchKeyword);
         showSearchResult(searchLists);
@@ -189,7 +190,7 @@ public class USM {
     private void searchRegion() {
         List<SearchVO> searchLists;
         String searchKeyword;
-        System.out.print("검색어:");
+        System.out.print(" 검색어: ");
         searchKeyword = scanner.nextLine();
         searchLists = new USMDao().selectProductJoinRegionWithKeyword(searchKeyword, client.getRegionID());
         showSearchResult(searchLists);
@@ -206,7 +207,7 @@ public class USM {
 
     //검색결과 리스트출력
     private void showSearchResult(List<SearchVO> searchLists) {
-        System.out.println("====================");
+        System.out.println("------------------------\\");
         String columnNo = "번호\t";
         String columnTitle = "제목";
         String columnName = "판매자";
@@ -230,8 +231,8 @@ public class USM {
 
     //상품조회 or 메인
     public void lookupOrMain(List<SearchVO> searchLists) {
-        System.out.println("====================");
-        System.out.println("1~n.상품상세\t0.돌아가기");
+        System.out.println("------------------------\\");
+        System.out.println(" 1~n.상품상세 \t 0.돌아가기");
         int ifNo = scanner.nextInt();
         scanner.nextLine();
         if (ifNo <= searchLists.size() && ifNo > 0) {
@@ -241,7 +242,7 @@ public class USM {
         } else if (ifNo == 0) {
             programMain();
         } else {
-            System.out.println("잘못입력하셨습니다. 다시입력해주세요.");
+            System.out.println("!! 잘못입력하셨습니다. 다시입력해주세요 !!");
             lookupOrMain(searchLists);
         }
     }
@@ -256,7 +257,7 @@ public class USM {
 
     //상품 상세 페이지
     private void seeDetail(List<SearchVO> searchLists, int ifNo) {
-        System.out.println("====================");
+        System.out.println("------------------------\\");
         SearchVO searchVO = searchLists.get(ifNo - 1);
         ProductVO product;
         int productID = searchVO.getProductID();
@@ -268,7 +269,7 @@ public class USM {
 
     //채팅 or 메인
     private void goChatOrMain() {
-        System.out.println("1.채팅하기\t0.메인으로 돌아가기");
+        System.out.println(" 1.채팅하기 \t 0.메인으로 돌아가기");
         switch (scanner.nextInt()) {
             case 1:
                 chat();
@@ -277,7 +278,7 @@ public class USM {
                 programMain();
                 break;
             default:
-                System.out.println("잘못입력했습니다. 다시입력해주세요");
+                System.out.println("!! 잘못입력했습니다. 다시입력해주세요 !!");
                 goChatOrMain();
                 break;
         }
@@ -297,11 +298,11 @@ public class USM {
         int price;
 
         StringBuilder descriptionBuilder = new StringBuilder();
-        System.out.println("====================");
-        System.out.println("판매등록");
-        System.out.print("제목:");
+        System.out.println("------------------------\\");
+        System.out.println(" \t [판매등록]");
+        System.out.print(" 제목: ");
         productName = scanner.nextLine();
-        System.out.println("내용(작성완료 : 빈줄에 '@end' 입력):");
+        System.out.println(" 내용(작성완료 : 빈줄에 '@end' 입력): ");
         while (true) {
             String description = scanner.nextLine();
             if (description.equals("@end")) {
@@ -312,12 +313,12 @@ public class USM {
             }
         }
         productDescription = descriptionBuilder.toString();
-        System.out.println("희망가격(숫자만입력):");
+        System.out.println(" 희망가격(숫자만입력): ");
         price = scanner.nextInt();
         scanner.nextLine();
 
         new USMDao().insertProduct(productName, productDescription, client.getClientID(), client.getRegionID(), price);
-        System.out.println("등록되었습니다.");
+        System.out.println(" . . . 등록되었습니다!");
         programMain();
     }
     //--------------------------------중고검색
@@ -326,8 +327,8 @@ public class USM {
     //--------------------------------내정보관리
     //내정보
     private void myProfile() {
-        System.out.println("====================");
-        System.out.println("1.등록상품관리\t2.프로필관리\t3.계정삭제\t0.메인으로");
+        System.out.println("------------------------\\");
+        System.out.println("  1.등록상품관리 \t 2.프로필관리 \t 3.계정삭제 \t 0.메인으로");
         switch (scanner.nextInt()) {
             case 1:
                 scanner.nextLine();
@@ -347,7 +348,7 @@ public class USM {
                 break;
             default:
                 scanner.nextLine();
-                System.out.println("잘못입력하셨습니다. 다시입력해주세요");
+                System.out.println("!! 잘못입력하셨습니다. 다시입력해주세요 !!");
                 myProfile();
                 break;
         }
@@ -355,7 +356,7 @@ public class USM {
 
     //등록상품관리
     private void productManage() {
-        System.out.println("====================");
+        System.out.println("------------------------\\");
         List<ProductVO> products = new USMDao().selectAllProductWhereClientID(client.getClientID());
         int i = 1;
         for (ProductVO vo : products) {
@@ -365,28 +366,28 @@ public class USM {
         }
 
         while (true) {
-            System.out.println("====================");
-            System.out.println("1~n.상품관리\t0.돌아가기");
+            System.out.println("------------------------\\");
+            System.out.println(" 1~n.상품관리 \t 0.돌아가기");
             int productIndex = scanner.nextInt();
             scanner.nextLine();
             if (productIndex <= products.size() && productIndex > 0) {
-                System.out.println("====================");
+                System.out.println("------------------------\\");
                 System.out.println("제목:" + products.get(productIndex - 1).getProductName());
                 System.out.println("내용:" + products.get(productIndex - 1).getProductDescription());
                 System.out.println("가격:" + products.get(productIndex - 1).getPrice());
                 while (true) {
-                    System.out.println("====================");
-                    System.out.println("1.제목수정\t2.설명수정\t3.가격수정\t4.등록취소\t0.뒤로");
+                    System.out.println("------------------------\\");
+                    System.out.println(" 1.제목수정 \t 2.설명수정 \t 3.가격수정 \t 4.등록취소 \t 0.뒤로");
                     switch (scanner.nextInt()) {
                         case 1:
                             scanner.nextLine();
-                            System.out.print("수정제목:");
+                            System.out.print(" 수정제목: ");
                             String newProductName = scanner.nextLine();
                             new USMDao().updateProductSetProductNameWhereProductID(products.get(productIndex - 1).getProductID(), newProductName);
                             break;
                         case 2:
                             scanner.nextLine();
-                            System.out.println("수정내용(작성완료 : 빈줄에 '@end' 입력):");
+                            System.out.println(" 수정내용(작성완료 : 빈줄에 '@end' 입력):");
                             StringBuilder productDescription = new StringBuilder();
                             while (true) {
                                 String description = scanner.nextLine();
@@ -402,7 +403,7 @@ public class USM {
                             break;
                         case 3:
                             scanner.nextLine();
-                            System.out.print("수정가격:");
+                            System.out.print(" 수정가격: ");
                             int newPrice = scanner.nextInt();
                             scanner.nextLine();
                             new USMDao().updateProductSetPriceWhereProductID(products.get(productIndex - 1).getProductID(), newPrice);
@@ -416,7 +417,7 @@ public class USM {
                             myProfile();
                             break;
                         default:
-                            System.out.println("잘못 입력했습니다. 다시 입력해주세요");
+                            System.out.println("!! 잘못 입력했습니다. 다시 입력해주세요 !!");
                     }
                     break;
                 }
@@ -426,20 +427,20 @@ public class USM {
                 myProfile();
                 break;
             } else {
-                System.out.println("잘못입력하셨습니다. 다시입력해주세요.");
+                System.out.println("!! 잘못입력하셨습니다. 다시입력해주세요 !!");
             }
         }
     }
 
     //프로필관리
     private void profileManage() {
-        System.out.println("====================");
-        System.out.println("전화번호:0" + clientID);
-        System.out.println("이름(닉네임):" + client.getClientName());
-        System.out.println("거주지역:" + client.getRegionID());
-        System.out.println("신뢰도:" + client.getReliable());
-        System.out.println("====================");
-        System.out.println("1.ID(전화번호)변경\t2.이름(닉네임)변경\t3.비밀번호변경\t4.지역변경(이사)\t0.메인으로");
+        System.out.println("------------------------\\");
+        System.out.println(" 전화번호:0" + clientID);
+        System.out.println(" 이름(닉네임):" + client.getClientName());
+        System.out.println(" 거주지역:" + client.getRegionID());
+        System.out.println(" 신뢰도:" + client.getReliable());
+        System.out.println("------------------------\\");
+        System.out.println(" 1.ID(전화번호)변경\t2.이름(닉네임)변경\t3.비밀번호변경\t4.지역변경(이사)\t0.메인으로");
 
 
         switch (scanner.nextInt()) {
@@ -465,7 +466,7 @@ public class USM {
                 break;
             default:
                 scanner.nextLine();
-                System.out.println("잘못입력하셨습니다. 다시입력해주세요.");
+                System.out.println("!! 잘못입력하셨습니다. 다시입력해주세요 !!");
                 profileManage();
                 break;
         }
@@ -474,82 +475,82 @@ public class USM {
 
     //전화번호 변경
     private void changeClientID() {
-        System.out.println("====================");
-        System.out.print("새전화번호:");
+        System.out.println("------------------------\\");
+        System.out.print(" 새전화번호: ");
         int newClientID = scanner.nextInt();
         scanner.nextLine();
-        System.out.print("새전화번호 확인:");
+        System.out.print(" 새전화번호 확인: ");
         int confirmClientID = scanner.nextInt();
         scanner.nextLine();
         if (newClientID == confirmClientID) {
             int result = new USMDao().updateClientInfoSetClientIDWhereClientID(clientID, newClientID);
             if (result == 1) {
-                System.out.println("수정완료");
+                System.out.println(" . . . 수정완료!");
                 new USMDao().updateProductSetClientIDWhereClientID(clientID, newClientID);
                 client = new ClientVO();
-                System.out.println("다시 로그인해주세요.");
+                System.out.println(" 다시 로그인해주세요.");
                 login();
             } else {
-                System.out.println("전화번호가 이미 존재합니다.");
+                System.out.println(" 전화번호가 이미 존재합니다.");
                 profileManage();
             }
         } else {
-            System.out.println("잘못 입력하셨습니다.");
+            System.out.println(" 잘못 입력하셨습니다.");
             profileManage();
         }
     }
 
     //이름(닉네임) 변경
     private void changeClientName() {
-        System.out.println("====================");
-        System.out.print("수정할 이름(닉네임):");
+        System.out.println("------------------------\\");
+        System.out.print(" 수정할 이름(닉네임): ");
         String newClientName = scanner.nextLine();
         new USMDao().updateClientInfoSetClientNameWhereClientID(clientID, newClientName);
         client = new USMDao().selectAllFromClientWhereID(clientID);
-        System.out.println("수정완료");
+        System.out.println(" . . . 수정완료!");
         programMain();
     }
 
     //비밀번호 변경
     private void changeClientPW() {
-        System.out.println("====================");
-        System.out.println("새비밀번호:");
+        System.out.println("------------------------\\");
+        System.out.println(" 새비밀번호: ");
         String newClientPW = scanner.nextLine();
-        System.out.println("새비밀번호 확인:");
+        System.out.println(" 새비밀번호 확인: ");
         String confirmClientPW = scanner.nextLine();
         if (newClientPW.equals(confirmClientPW)) {
             int result = new USMDao().updateClientInfoSetClientPWWhereClientID(clientID, newClientPW);
             if (result == 1) {
-                System.out.println("수정완료");
+                System.out.println(" . . . 수정완료!");
                 client = new ClientVO();
-                System.out.println("다시 로그인해주세요.");
+                System.out.println(" 다시 로그인해주세요.");
                 login();
             } else {
-                System.out.println("잘못된 비밀번호입니다.");
+                System.out.println(" 잘못된 비밀번호입니다.");
                 profileManage();
             }
         } else {
-            System.out.println("잘못 입력하셨습니다.");
+            System.out.println(" 잘못 입력하셨습니다.");
             profileManage();
         }
     }
 
     //지역 변경
     private void changeRegionID() {
-        System.out.println("====================");
+        System.out.println("------------------------\\");
         String newRegion = selectRegionID();
         new USMDao().updateClientInfoSetRegionIDWhereClientID(clientID, newRegion);
         new USMDao().updateProductSetRegionIDWhereClientID(clientID, newRegion);
         client = new USMDao().selectAllFromClientWhereID(clientID);
-        System.out.println("수정완료");
+        System.out.println(" . . . 수정완료!");
         programMain();
     }
 
     //계정삭제
     private void deleteAccount() {
-        System.out.println("====================");
-        System.out.println("계정을 삭제하면 등록한 상품도 모두 삭제됩니다.");
-        System.out.println("정말 삭제하시려면 비밀번호를 입력해주세요.");
+        System.out.println("------------------------\\");
+        System.out.println(" 계정을 삭제하면 등록한 상품도 모두 삭제됩니다.");
+        System.out.println(" 정말 삭제하시려면 비밀번호를 입력해주세요.");
         String confirmPW = scanner.nextLine();
         if (clientPW.equals(confirmPW)) {
             //삭제
@@ -560,7 +561,7 @@ public class USM {
             startProgram();
 
         } else {
-            System.out.println("비밀번호가 다릅니다. - 메인으로 이동합니다.");
+            System.out.println(" 비밀번호가 다릅니다. - 메인으로 이동합니다.");
             myProfile();
         }
     }
@@ -613,7 +614,7 @@ public class USM {
                 regionID = "제주도";
                 break;
             } else {
-                System.out.println("잘못입력하셨습니다. 다시입력해주세요.");
+                System.out.println("!! 잘못입력하셨습니다. 다시입력해주세요 !!");
             }
         }
         return regionID;
