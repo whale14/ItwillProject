@@ -1,3 +1,4 @@
+package com.usm.vo;
 import java.sql.Timestamp;
 
 public class ChatMessageVO {

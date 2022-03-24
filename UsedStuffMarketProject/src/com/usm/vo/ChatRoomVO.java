@@ -1,3 +1,4 @@
+package com.usm.vo;
 public class ChatRoomVO {
     private int roomID;
     private int sellerID;

@@ -1,6 +1,13 @@
+package com.usm.dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.usm.vo.ChatMessageVO;
+import com.usm.vo.ChatRoomVO;
+import com.usm.vo.ClientVO;
+import com.usm.vo.ProductVO;
+import com.usm.vo.SearchVO;
 
 public class USMDao {
     private final static String DRIVER = "oracle.jdbc.OracleDriver";
@@ -516,19 +523,18 @@ public class USMDao {
 
     public void insertChat(String text, int roomID, ClientVO client) {
         try {
-            if (!text.equals("")) {
-                connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                StringBuilder sql = new StringBuilder();
-                sql.append("INSERT INTO CHATMESSAGE ");
-                sql.append(" VALUES ((SELECT MAX(MESSAGE_ID)+1 FROM CHATMESSAGE), ");
-                sql.append(" '").append(text).append("', ");
-                sql.append(" SYSDATE").append(", ");
-                sql.append(" ").append(client.getClientID()).append(", ");
-                sql.append(" '").append(client.getClientName()).append("', ");
-                sql.append(" ").append(roomID).append(")");
-                preparedStatement = connection.prepareStatement(sql.toString());
-                preparedStatement.executeUpdate();
-            }
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("INSERT INTO CHATMESSAGE ");
+            sql.append(" VALUES ((SELECT MAX(MESSAGE_ID)+1 FROM CHATMESSAGE), ");
+            sql.append(" '").append(text).append("', ");
+            sql.append(" SYSDATE").append(", ");
+            sql.append(" ").append(client.getClientID()).append(", ");
+            sql.append(" '").append(client.getClientName()).append("', ");
+            sql.append(" ").append(roomID).append(")");
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

@@ -1,3 +1,4 @@
+package com.usm.vo;
 public class ClientVO {
     private int clientID;
     private String clientPW;

@@ -1,3 +1,4 @@
+package com.usm.vo;
 public class SearchVO {
     private int productID;
     private String clientName;

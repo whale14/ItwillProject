@@ -1,6 +1,13 @@
 import java.util.List;
 import java.util.Scanner;
 
+import com.usm.dao.USMDao;
+import com.usm.vo.ClientVO;
+import com.usm.vo.ChatMessageVO;
+import com.usm.vo.ChatRoomVO;
+import com.usm.vo.ProductVO;
+import com.usm.vo.SearchVO;
+
 public class USM {
     private String loginOrSignup;
     private final Scanner scanner = new Scanner(System.in);
@@ -632,6 +639,10 @@ public class USM {
         if (messages != null) {
             showChatRecord(messages);
         }
+        chatting(chatRoom);
+    }
+
+    private void chatting(ChatRoomVO chatRoom) {
         while (true) {
             String text = scanner.nextLine();
             if (text.equals("@exit")) {
@@ -642,7 +653,8 @@ public class USM {
             } else if (text.equals("@end")) {
                 programMain();
                 break;
-            } else new USMDao().insertChat(text, chatRoom.getRoomID(), client);
+            } else if (text.equals("")) continue;
+            else { new USMDao().insertChat(text, chatRoom.getRoomID(), client);}
         }
     }
 
@@ -678,19 +690,7 @@ public class USM {
         if (messages != null) {
             showChatRecord(messages);
         }
-
-        while (true) {
-            String text = scanner.nextLine();
-            if (text.equals("@exit")) {
-                new USMDao().deleteChatMessageWhereRoomID(chatRoom.getRoomID());
-                new USMDao().deleteChatRoomWhereRoomID(chatRoom.getRoomID());
-                programMain();
-                break;
-            } else if (text.equals("@end")) {
-                programMain();
-                break;
-            } else new USMDao().insertChat(text, chatRoom.getRoomID(), client);
-        }
+        chatting(chatRoom);
     }
 
     //채팅기록 출력

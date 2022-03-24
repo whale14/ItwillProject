@@ -1,3 +1,4 @@
+package com.usm.vo;
 public class ProductVO {
     private int productID;
     private String productName;
