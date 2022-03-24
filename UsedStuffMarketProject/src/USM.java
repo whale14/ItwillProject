@@ -113,6 +113,7 @@ public class USM {
         System.out.println(" 1.중고검색");
         System.out.println(" 2.판매등록");
         System.out.println(" 3.내정보(프로필/판매상품 관리)");
+        System.out.println(" 4.채팅");
         System.out.print(" 0.프로그램 종료 \n >> ");
         switch (scanner.nextInt()) {
             case 1:
@@ -127,6 +128,9 @@ public class USM {
                 scanner.nextLine();
                 myProfile();
                 break;
+            case 4:
+                chatMain();
+                break;
             case 0:
                 scanner.nextLine();
                 System.out.println(" 이용해주셔서 감사합니다.");
@@ -139,10 +143,12 @@ public class USM {
         }
     }
 
+
+
     //--------------------------------중고검색
     //검색 메인
     public void searchMain() {
-    	System.out.println("------------------------\\");
+        System.out.println("------------------------\\");
         System.out.println(" 검색조건을 입력해주세요");
         System.out.println(" 1.전지역 키워드 검색");
         System.out.println(" 2.내지역 키워드 검색");
@@ -180,7 +186,7 @@ public class USM {
         String searchKeyword;
         System.out.print(" 검색어: ");
         searchKeyword = scanner.nextLine();
-        searchLists = new USMDao().selectProductWithKeyword(searchKeyword);
+        searchLists = new USMDao().selectClientJoinProductWithProductNameKeyword(searchKeyword);
         showSearchResult(searchLists);
         lookupOrMain(searchLists);
 
@@ -192,7 +198,7 @@ public class USM {
         String searchKeyword;
         System.out.print(" 검색어: ");
         searchKeyword = scanner.nextLine();
-        searchLists = new USMDao().selectProductJoinRegionWithKeyword(searchKeyword, client.getRegionID());
+        searchLists = new USMDao().selectClientJoinProductWithRegionAndProductNameKeyword(searchKeyword, client.getRegionID());
         showSearchResult(searchLists);
         lookupOrMain(searchLists);
     }
@@ -221,7 +227,7 @@ public class USM {
         for (SearchVO vo : searchLists) {
             String title = String.format("%-20s", vo.getProductName());
             String name = String.format("%-7s", vo.getClientName());
-            String region = String.format("%-5s" ,vo.getRegionID());
+            String region = String.format("%-5s", vo.getRegionID());
             String price = String.format("%9s", vo.getPrice());
             String reliable = String.format("%3s", vo.getReliable());
             System.out.println(i++ + ".\t|" + title + "|" + name + "|" + region + "|" + price + "|" + reliable);
@@ -237,7 +243,6 @@ public class USM {
         scanner.nextLine();
         if (ifNo <= searchLists.size() && ifNo > 0) {
             seeDetail(searchLists, ifNo);
-            goChatOrMain();
 
         } else if (ifNo == 0) {
             programMain();
@@ -245,14 +250,6 @@ public class USM {
             System.out.println("!! 잘못입력하셨습니다. 다시입력해주세요 !!");
             lookupOrMain(searchLists);
         }
-    }
-
-    //상품 상세출력
-    private void productDetailForm(ProductVO product) {
-        System.out.println(product.getProductName());
-        System.out.println(product.getProductDescription());
-        System.out.println("희망가격:" + product.getPrice() + "원");
-        System.out.println("판매자 연락처:0" + product.getClientID());
     }
 
     //상품 상세 페이지
@@ -264,30 +261,37 @@ public class USM {
         product = new USMDao().selectAllProductWhereProductID(productID);
         //정보 출력
         productDetailForm(product);
+        goChatOrMain(product);
+    }
 
+    //상품 상세출력
+    private void productDetailForm(ProductVO product) {
+        System.out.println(product.getProductName());
+        System.out.println(product.getProductDescription());
+        System.out.println("희망가격:" + product.getPrice() + "원");
+        System.out.println("판매자 연락처:0" + product.getClientID());
     }
 
     //채팅 or 메인
-    private void goChatOrMain() {
+    private void goChatOrMain(ProductVO product) {
         System.out.println(" 1.채팅하기 \n 0.메인으로 돌아가기");
         switch (scanner.nextInt()) {
             case 1:
-                chat();
+                scanner.nextLine();
+                buyerChat(product.getClientID());
                 break;
             case 0:
+                scanner.nextLine();
                 programMain();
                 break;
             default:
+                scanner.nextLine();
                 System.out.println("!! 잘못입력했습니다. 다시입력해주세요 !!");
-                goChatOrMain();
+                goChatOrMain(product);
                 break;
         }
     }
 
-    //채팅
-    private void chat() {
-        System.out.println("채팅");
-    }
     //--------------------------------중고검색
 
 
@@ -566,6 +570,135 @@ public class USM {
         }
     }
     //--------------------------------중고검색
+
+    //--------------------------------채팅
+    private void chatMain() {
+        System.out.println("------------------------\\");
+        System.out.println("1.판매중");
+        System.out.println("2.구매중");
+        System.out.println("0.돌아가기");
+        switch (scanner.nextInt()) {
+            case 1:
+                scanner.nextLine();
+                showSellerChatList();
+                break;
+            case 2:
+                scanner.nextLine();
+                showBuyerChatList();
+                break;
+            case 0:
+                scanner.nextLine();
+                programMain();
+                break;
+            default:
+                scanner.nextLine();
+                System.out.println("잘못입력하셨습니다. 다시입력해주세요.");
+                chatMain();
+        }
+
+    }
+
+
+    private void showSellerChatList() {
+        System.out.println("------------------------\\");
+        System.out.println(" 1~n.입장 \t 0.돌아가기");
+        List<ChatRoomVO> sellerChats = new USMDao().selectChatRoomWhereSellerID(client.getClientID());
+        int i = 1;
+        for (ChatRoomVO vo : sellerChats) {
+            System.out.println((i++) + "." + new USMDao().selectAllFromClientWhereID(vo.getBuyerID()).getClientName() + "님과의 채팅");
+        }
+        int ifNo = scanner.nextInt();
+        scanner.nextLine();
+        if (ifNo <= sellerChats.size() && ifNo > 0) {
+            sellerChat(sellerChats.get(ifNo-1).getBuyerID());
+        } else if (ifNo == 0) {
+            chatMain();
+        } else {
+            System.out.println("!! 잘못입력하셨습니다. 다시입력해주세요 !!");
+            showSellerChatList();
+        }
+    }
+
+
+    private void sellerChat(int buyerID) {
+        System.out.println("------------------------\\");
+        ClientVO buyer = new USMDao().selectAllFromClientWhereID(buyerID);
+        System.out.println(buyer.getClientName() + "님과의 채팅");
+        System.out.println("@end>>채팅종료");
+        System.out.println("@exit>>채팅방 나가기(삭제)");
+        List<ChatMessageVO> messages = null;
+        ChatRoomVO chatRoom = new USMDao().selectChatRoomWhereSellerIDAndBuyerID(clientID, buyerID);
+        messages = new USMDao().selectChatMessageWhereRoomID(chatRoom.getRoomID());
+        if (messages != null) {
+            showChatRecord(messages);
+        }
+        while (true) {
+            String text = scanner.nextLine();
+            if (text.equals("@exit")) {
+                new USMDao().deleteChatMessageWhereRoomID(chatRoom.getRoomID());
+                new USMDao().deleteChatRoomWhereRoomID(chatRoom.getRoomID());
+                programMain();
+                break;
+            } else if (text.equals("@end")) {
+                programMain();
+                break;
+            } else new USMDao().insertChat(text, chatRoom.getRoomID(), client);
+        }
+    }
+
+    private void showBuyerChatList() {
+        System.out.println("------------------------\\");
+        System.out.println(" 1~n.입장 \t 0.돌아가기");
+        List<ChatRoomVO> buyerChats = new USMDao().selectChatRoomWhereBuyerID(client.getClientID());
+        int i = 1;
+        for (ChatRoomVO vo : buyerChats) {
+            System.out.println((i++) + "." + new USMDao().selectAllFromClientWhereID(vo.getSellerID()).getClientName() + "님과의 채팅");
+        }
+        int ifNo = scanner.nextInt();
+        scanner.nextLine();
+        if (ifNo <= buyerChats.size() && ifNo > 0) {
+            buyerChat(buyerChats.get(ifNo-1).getSellerID());
+        } else if (ifNo == 0) {
+            chatMain();
+        } else {
+            System.out.println("!! 잘못입력하셨습니다. 다시입력해주세요 !!");
+            showSellerChatList();
+        }
+    }
+
+    private void buyerChat(int sellerID) {
+        System.out.println("------------------------\\");
+        ClientVO seller = new USMDao().selectAllFromClientWhereID(sellerID);
+        System.out.println(seller.getClientName() + "님과의 채팅");
+        System.out.println("@end>>채팅종료");
+        System.out.println("@exit>>채팅방 나가기(삭제)");
+        List<ChatMessageVO> messages = null;
+        ChatRoomVO chatRoom = new USMDao().selectChatRoomWhereSellerIDAndBuyerID(sellerID, clientID);
+        messages = new USMDao().selectChatMessageWhereRoomID(chatRoom.getRoomID());
+        if (messages != null) {
+            showChatRecord(messages);
+        }
+
+        while (true) {
+            String text = scanner.nextLine();
+            if (text.equals("@exit")) {
+                new USMDao().deleteChatMessageWhereRoomID(chatRoom.getRoomID());
+                new USMDao().deleteChatRoomWhereRoomID(chatRoom.getRoomID());
+                programMain();
+                break;
+            } else if (text.equals("@end")) {
+                programMain();
+                break;
+            } else new USMDao().insertChat(text, chatRoom.getRoomID(), client);
+        }
+    }
+
+    //채팅기록 출력
+    private void showChatRecord(List<ChatMessageVO> messages) {
+        for (ChatMessageVO vo : messages) {
+            System.out.println("[" + vo.getClientName() + "]:" + vo.getMessageContents());
+        }
+    }
 
     //그외
     //거주지역선택

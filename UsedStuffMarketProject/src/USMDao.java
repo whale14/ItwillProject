@@ -72,7 +72,7 @@ public class USMDao {
         return result;
     }
 
-    public List<SearchVO> selectProductWithKeyword(String searchKeyword) {
+    public List<SearchVO> selectClientJoinProductWithProductNameKeyword(String searchKeyword) {
         List<SearchVO> searchLists;
         searchLists = new ArrayList<SearchVO>();
         try {
@@ -130,7 +130,7 @@ public class USMDao {
         return product;
     }
 
-    public List<SearchVO> selectProductJoinRegionWithKeyword(String keyword, String regionID) {
+    public List<SearchVO> selectClientJoinProductWithRegionAndProductNameKeyword(String keyword, String regionID) {
         List<SearchVO> searchLists;
         searchLists = new ArrayList<>();
         try {
@@ -170,7 +170,7 @@ public class USMDao {
             sql.append("SELECT p.PRODUCT_ID, c.CLIENT_NAME, p.PRODUCT_NAME, p.REGION_ID, p.PRICE, c.RELIABILITY ");
             sql.append(" FROM CLIENT_INFO c JOIN PRODUCT p ");
             sql.append(" ON c.CLIENT_ID = p.CLIENT_ID");
-            sql.append(" AND p.REGION_ID = '" + regionID +"'");
+            sql.append(" AND p.REGION_ID = '" + regionID + "'");
             preparedStatement = connection.prepareStatement(sql.toString());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -440,6 +440,182 @@ public class USMDao {
         }
     }
 
+    public ChatRoomVO selectChatRoomWhereSellerIDAndBuyerID(int clientID1, int clientID2) {
+        ChatRoomVO chatRoom = null;
+        try {
+            while (true) {
+                connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                StringBuilder sql = new StringBuilder();
+                sql.append("SELECT * ");
+                sql.append(" FROM CHATROOM ");
+                sql.append(" WHERE SELLER_ID = ").append(clientID1).append(" ");
+                sql.append(" AND BUYER_ID = ").append(clientID2).append("");
+                preparedStatement = connection.prepareStatement(sql.toString());
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    chatRoom = new ChatRoomVO(resultSet.getInt("ROOM_ID"),
+                            resultSet.getInt("SELLER_ID"),
+                            resultSet.getInt("BUYER_ID"));
+                    break;
+                } else {
+                    makeChatRoom(clientID1, clientID2);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement, resultSet);
+        }
+        return chatRoom;
+    }
+
+    private void makeChatRoom(int sellerID, int buyerID) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("INSERT INTO CHATROOM ");
+            sql.append(" VALUES ((SELECT MAX(ROOM_ID)+1 FROM CHATROOM), ");
+            sql.append(" ").append(sellerID).append(", ");
+            sql.append(" ").append(buyerID).append(")");
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement);
+        }
+    }
+
+    public List<ChatMessageVO> selectChatMessageWhereRoomID(int roomID) {
+        List<ChatMessageVO> chatMessages = new ArrayList<>();
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT * ");
+            sql.append(" FROM CHATMESSAGE ");
+            sql.append(" WHERE ROOM_ID = ").append(roomID);
+            sql.append(" ORDER BY SENDTIME ASC");
+            preparedStatement = connection.prepareStatement(sql.toString());
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                ChatMessageVO messageVO = new ChatMessageVO(resultSet.getInt("MESSAGE_ID"),
+                        resultSet.getString("MESSAGE_CONTENTS"),
+                        resultSet.getTimestamp("SENDTIME"),
+                        resultSet.getInt("CLIENT_ID"),
+                        resultSet.getString("CLIENT_NAME"),
+                        resultSet.getInt("ROOM_ID"));
+                chatMessages.add(messageVO);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement, resultSet);
+        }
+        return chatMessages;
+    }
+
+    public void insertChat(String text, int roomID, ClientVO client) {
+        try {
+            if (!text.equals("")) {
+                connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                StringBuilder sql = new StringBuilder();
+                sql.append("INSERT INTO CHATMESSAGE ");
+                sql.append(" VALUES ((SELECT MAX(MESSAGE_ID)+1 FROM CHATMESSAGE), ");
+                sql.append(" '").append(text).append("', ");
+                sql.append(" SYSDATE").append(", ");
+                sql.append(" ").append(client.getClientID()).append(", ");
+                sql.append(" '").append(client.getClientName()).append("', ");
+                sql.append(" ").append(roomID).append(")");
+                preparedStatement = connection.prepareStatement(sql.toString());
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement);
+        }
+    }
+
+    public void deleteChatMessageWhereRoomID(int roomID) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("DELETE CHATMESSAGE ");
+            sql.append(" WHERE ROOM_ID = ").append(roomID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement);
+        }
+    }
+
+    public void deleteChatRoomWhereRoomID(int roomID) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("DELETE CHATROOM ");
+            sql.append(" WHERE ROOM_ID = ").append(roomID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement);
+        }
+    }
+
+    public List<ChatRoomVO> selectChatRoomWhereSellerID(int clientID) {
+        List<ChatRoomVO> chatRooms = new ArrayList<>();
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT *");
+            sql.append(" FROM CHATROOM ");
+            sql.append(" WHERE SELLER_ID = ").append(clientID);
+            sql.append(" ORDER BY ROOM_ID ASC");
+            preparedStatement = connection.prepareStatement(sql.toString());
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                ChatRoomVO vo = new ChatRoomVO(resultSet.getInt("ROOM_ID"),
+                        resultSet.getInt("SELLER_ID"),
+                        resultSet.getInt("BUYER_ID"));
+                chatRooms.add(vo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement, resultSet);
+        }
+        return chatRooms;
+    }
+
+    public List<ChatRoomVO> selectChatRoomWhereBuyerID(int clientID) {
+        List<ChatRoomVO> chatRooms = new ArrayList<>();
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT *");
+            sql.append(" FROM CHATROOM ");
+            sql.append(" WHERE BUYER_ID = ").append(clientID);
+            sql.append(" ORDER BY ROOM_ID ASC");
+            preparedStatement = connection.prepareStatement(sql.toString());
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                ChatRoomVO vo = new ChatRoomVO(resultSet.getInt("ROOM_ID"),
+                        resultSet.getInt("SELLER_ID"),
+                        resultSet.getInt("BUYER_ID"));
+                chatRooms.add(vo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement, resultSet);
+        }
+        return chatRooms;
+    }
+
     private void close(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet) {
         try {
             resultSet.close();
@@ -458,5 +634,6 @@ public class USMDao {
             e.printStackTrace();
         }
     }
+
 
 }
