@@ -54,7 +54,7 @@ public class USMDao {
         }
         return client;
     }
-
+    //회원가입
     public int insertClient(ClientVO vo) {
         int result = 0;
         try {
@@ -78,7 +78,8 @@ public class USMDao {
         }
         return result;
     }
-
+    
+    //전지역 PRODUCT_NAME 키워드 검색
     public List<SearchVO> selectClientJoinProductWithProductNameKeyword(String searchKeyword) {
         List<SearchVO> searchLists;
         searchLists = new ArrayList<SearchVO>();
@@ -108,7 +109,7 @@ public class USMDao {
         }
         return searchLists;
     }
-
+    //PRODUCT데이터 PRODUCT_ID로 조회
     public ProductVO selectAllProductWhereProductID(int productID) {
         ProductVO product = null;
         try {
@@ -136,7 +137,7 @@ public class USMDao {
         }
         return product;
     }
-
+    //내지역 + PRODUCT_NAME 키워드 검색
     public List<SearchVO> selectClientJoinProductWithRegionAndProductNameKeyword(String keyword, String regionID) {
         List<SearchVO> searchLists;
         searchLists = new ArrayList<>();
@@ -167,7 +168,7 @@ public class USMDao {
         }
         return searchLists;
     }
-
+    //내지역 상품 전체 보기
     public List<SearchVO> selectProductJoinRegion(String regionID) {
         List<SearchVO> searchLists;
         searchLists = new ArrayList<>();
@@ -197,7 +198,8 @@ public class USMDao {
         }
         return searchLists;
     }
-
+    
+    //상품등록
     public void insertProduct(String productName, String productDescription, int clientID, String regionID, int price) {
         int result = 0;
         try {
@@ -218,7 +220,7 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    //내 등록 상품 조회
     public List<ProductVO> selectAllProductWhereClientID(int clientID) {
         List<ProductVO> products;
         products = new ArrayList<>();
@@ -247,7 +249,7 @@ public class USMDao {
         }
         return products;
     }
-
+    //등록상품 제목 변경
     public void updateProductSetProductNameWhereProductID(int productID, String newProductName) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -264,7 +266,7 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    //등록상품 지역 변경
     public void updateProductSetProductDescriptionWhereProductID(int productID, String newProductDescription) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -281,7 +283,7 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    //등록상품 가격 변경
     public void updateProductSetPriceWhereProductID(int productID, int newPrice) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -298,7 +300,7 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    //등록취소
     public void deleteProductWhereProductID(int productID) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -314,7 +316,8 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    
+    //계정삭제
     public void deleteClientWhereClientID(int clientID) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -330,7 +333,24 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    //계정삭제 -> 내가 등록한상품 전체삭제
+    public void deleteProductWhereClientID(int clientID) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            StringBuilder sql = new StringBuilder();
+            sql.append("DELETE PRODUCT ");
+            sql.append(" WHERE CLIENT_ID = ").append(clientID);
+            preparedStatement = connection.prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("계정삭제완료");
+            close(connection, preparedStatement);
+        }
+    }
+    
+    //ID(전화번호) 변경
     public int updateClientInfoSetClientIDWhereClientID(int clientID, int newClientID) {
         int result = 0;
         try {
@@ -348,7 +368,7 @@ public class USMDao {
         }
         return result;
     }
-
+    //이름(닉네임) 변경
     public void updateClientInfoSetClientNameWhereClientID(int clientID, String newClientName) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -364,7 +384,7 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    //비밀번호 변경
     public int updateClientInfoSetClientPWWhereClientID(int clientID, String newClientPW) {
         int result = 0;
         try {
@@ -382,23 +402,7 @@ public class USMDao {
         }
         return result;
     }
-
-    public void deleteProductWhereClientID(int clientID) {
-        try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            StringBuilder sql = new StringBuilder();
-            sql.append("DELETE PRODUCT ");
-            sql.append(" WHERE CLIENT_ID = ").append(clientID);
-            preparedStatement = connection.prepareStatement(sql.toString());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            System.out.println("계정삭제완료");
-            close(connection, preparedStatement);
-        }
-    }
-
+    //내ID변경 -> 내가등록한 상품의 CLIENT_ID변경
     public void updateProductSetClientIDWhereClientID(int clientID, int newClientID) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -414,7 +418,7 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    //내 지역변경 -> 내가등록한 상품의 REGION_ID변경
     public void updateProductSetRegionIDWhereClientID(int clientID, String newRegion) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -430,7 +434,7 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    //지역 변경
     public void updateClientInfoSetRegionIDWhereClientID(int clientID, String newRegion) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -446,7 +450,8 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    
+    //채팅방 조회
     public ChatRoomVO selectChatRoomWhereSellerIDAndBuyerID(int clientID1, int clientID2) {
         ChatRoomVO chatRoom = null;
         try {
@@ -475,7 +480,7 @@ public class USMDao {
         }
         return chatRoom;
     }
-
+    //채팅방 만들기
     private void makeChatRoom(int sellerID, int buyerID) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -492,7 +497,7 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    //채팅메세지 불러오기
     public List<ChatMessageVO> selectChatMessageWhereRoomID(int roomID) {
         List<ChatMessageVO> chatMessages = new ArrayList<>();
         try {
@@ -520,7 +525,7 @@ public class USMDao {
         }
         return chatMessages;
     }
-
+    //채팅
     public void insertChat(String text, int roomID, ClientVO client) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -541,7 +546,7 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    //채팅메세지삭제
     public void deleteChatMessageWhereRoomID(int roomID) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -556,7 +561,7 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    //채팅방삭제
     public void deleteChatRoomWhereRoomID(int roomID) {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -571,7 +576,7 @@ public class USMDao {
             close(connection, preparedStatement);
         }
     }
-
+    //판매중인 채팅방 조회
     public List<ChatRoomVO> selectChatRoomWhereSellerID(int clientID) {
         List<ChatRoomVO> chatRooms = new ArrayList<>();
         try {
@@ -596,7 +601,7 @@ public class USMDao {
         }
         return chatRooms;
     }
-
+    //구매중인 채팅방 조회
     public List<ChatRoomVO> selectChatRoomWhereBuyerID(int clientID) {
         List<ChatRoomVO> chatRooms = new ArrayList<>();
         try {
@@ -621,7 +626,7 @@ public class USMDao {
         }
         return chatRooms;
     }
-
+    
     private void close(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet) {
         try {
             resultSet.close();
